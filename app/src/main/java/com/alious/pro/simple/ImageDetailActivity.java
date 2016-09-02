@@ -1,8 +1,8 @@
 package com.alious.pro.simple;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -58,6 +58,9 @@ public class ImageDetailActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parseIntent(getIntent());
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_img_detail);
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -153,19 +156,39 @@ public class ImageDetailActivity extends Activity{
 //        img_head.setScale(mScale);
         mColorDrawable = new ColorDrawable(Color.BLACK);
         main_background.setBackgroundDrawable(mColorDrawable);
+
+        img_head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+                ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+                AnimatorSet translateSet = new AnimatorSet();
+                translateSet.playTogether(translateX, translateY);
+                translateSet.setDuration(0).start();
+            }
+        });
     }
 
     public void enterValueAnimation() {
         LinearInterpolator interpolator = new LinearInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
+        ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+        ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+        AnimatorSet translateSet = new AnimatorSet();
+        translateSet.playTogether(translateX, translateY);
+        translateSet.setDuration(0).start();
+
         ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", screenWidth);
         ValueAnimator scaleAnimator =
                 ObjectAnimator.ofFloat(viewWrapper, "simpleScale", 1, mScale);
+        ValueAnimator translateXAnim = ObjectAnimator.ofFloat(img_head, "translationX", mLeftDelta, 0);
+        ValueAnimator translateYAnim = ObjectAnimator.ofFloat(img_head, "translationY", mTopDelta, 0);
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(animator, scaleAnimator);
+        animatorSet.playTogether(animator, scaleAnimator, translateXAnim, translateYAnim);
         animatorSet.setInterpolator(interpolator);
+        animatorSet.setStartDelay(10);
         animatorSet.setDuration(ANIM_DURATION).start();
     }
 
@@ -220,10 +243,47 @@ public class ImageDetailActivity extends Activity{
 //    }
 
     public void exitAnimation(final Runnable endAction) {
-        TimeInterpolator sInterpolator = new AccelerateInterpolator();
-        img_head.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
-                translationX(mLeftDelta).translationY(mTopDelta)
-                .setInterpolator(sInterpolator).withEndAction(endAction);
+//        TimeInterpolator sInterpolator = new AccelerateInterpolator();
+//        img_head.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
+//                translationX(mLeftDelta).translationY(mTopDelta)
+//                .setInterpolator(sInterpolator).withEndAction(endAction);
+
+        LinearInterpolator interpolator = new LinearInterpolator();
+        ViewWrapper viewWrapper = new ViewWrapper(img_head);
+
+        ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
+        ValueAnimator scaleAnimator =
+                ObjectAnimator.ofFloat(viewWrapper, "simpleScale", mScale, 1);
+        ValueAnimator translateXAnim = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+        ValueAnimator translateYAnim = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animator, scaleAnimator, translateXAnim, translateYAnim);
+        animatorSet.setInterpolator(interpolator);
+        animatorSet.setStartDelay(10);
+        animatorSet.setDuration(ANIM_DURATION).start();
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                endAction.run();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
 
         // Fade out background
         ObjectAnimator bgAnim = ObjectAnimator.ofInt(mColorDrawable, "alpha", 0);

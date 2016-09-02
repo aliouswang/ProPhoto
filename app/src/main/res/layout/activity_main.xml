@@ -10,10 +10,9 @@
     <com.alious.pro.simple.ScaleSimpleDraweeView
         android:id="@+id/img_head"
         fresco:actualImageScaleType="centerCrop"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_width="100dp"
         android:layout_height="100dp"/>
-
 
     <Button
         android:id="@+id/btn_start"

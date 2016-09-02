@@ -1,5 +1,8 @@
 package com.alious.pro.simple;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -79,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 );
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+
+
+
             }
         });
 
