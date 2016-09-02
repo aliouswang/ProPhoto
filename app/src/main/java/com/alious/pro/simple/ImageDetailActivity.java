@@ -1,7 +1,9 @@
 package com.alious.pro.simple;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,11 +12,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -36,7 +39,7 @@ public class ImageDetailActivity extends Activity{
     private ColorDrawable mColorDrawable;
 
 
-    private static final int ANIM_DURATION = 600;
+    private static final int ANIM_DURATION = 300;
     private int mLeftDelta;
     private int mTopDelta;
     private float mWidthScale;
@@ -48,12 +51,20 @@ public class ImageDetailActivity extends Activity{
     private int thumbnailWidth;
     private int thumbnailHeight;
 
+    private int screenHeight;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         parseIntent(getIntent());
         setContentView(R.layout.activity_img_detail);
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        screenHeight = displaymetrics.heightPixels;
+        screenWidth = displaymetrics.widthPixels;
+
         initView();
 
         // Only run the animation if we're coming from the parent activity, not if
@@ -76,7 +87,7 @@ public class ImageDetailActivity extends Activity{
                             if (imageInfo == null) {
                                 return;
                             }
-                            img_head.setScale((float) imageInfo.getHeight() / (float) imageInfo.getWidth());
+//                            img_head.setScale((float) imageInfo.getHeight() / (float) imageInfo.getWidth());
                         }
 
                         @Override
@@ -87,7 +98,7 @@ public class ImageDetailActivity extends Activity{
                         public void onFailure(String id, Throwable throwable) {
                         }
                     };
-                    Uri uri = Uri.parse(Photo.images[0]);
+                    Uri uri = Uri.parse(Photo.images[2]);
                     DraweeController controller = Fresco.newDraweeControllerBuilder()
                             .setControllerListener(controllerListener)
                             .setUri(uri)
@@ -118,7 +129,7 @@ public class ImageDetailActivity extends Activity{
                     mWidthScale = (float) thumbnailWidth / measureWidth;
                     mHeightScale = (float) thumbnailHeight / measureHeight;
 
-                    enterAnimation();
+                    enterValueAnimation();
 
                     return true;
                 }
@@ -139,33 +150,74 @@ public class ImageDetailActivity extends Activity{
     private void initView() {
         main_background = findViewById(R.id.main_background);
         img_head = (ScaleSimpleDraweeView) findViewById(R.id.img_head);
-        img_head.setScale(mScale);
+//        img_head.setScale(mScale);
         mColorDrawable = new ColorDrawable(Color.BLACK);
         main_background.setBackgroundDrawable(mColorDrawable);
+    }
 
+    public void enterValueAnimation() {
+        LinearInterpolator interpolator = new LinearInterpolator();
+        ViewWrapper viewWrapper = new ViewWrapper(img_head);
+
+        ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", screenWidth);
+        ValueAnimator scaleAnimator =
+                ObjectAnimator.ofFloat(viewWrapper, "simpleScale", 1, mScale);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animator, scaleAnimator);
+        animatorSet.setInterpolator(interpolator);
+        animatorSet.setDuration(ANIM_DURATION).start();
+    }
+
+    private static class ViewWrapper {
+        private View mTarget;
+
+        private float mScale = 1;
+
+        public ViewWrapper(View target) {
+            mTarget = target;
+        }
+
+        public int getWidth() {
+            return mTarget.getLayoutParams().width;
+        }
+
+        public void setWidth(int width) {
+            mTarget.getLayoutParams().width = width;
+            mTarget.requestLayout();
+        }
+
+        public float getSimpleScale() {
+            return mScale;
+        }
+
+        public void setSimpleScale(float scale) {
+            this.mScale = scale;
+            ((ScaleSimpleDraweeView) mTarget).setScale(scale);
+        }
 
     }
 
-    public void enterAnimation() {
-        img_head.setPivotX(0);
-        img_head.setPivotY(0);
-        img_head.setScaleX(mWidthScale);
-        img_head.setScaleY(mHeightScale);
-        img_head.setTranslationX(mLeftDelta);
-        img_head.setTranslationY(mTopDelta);
-
-        // interpolator where the rate of change starts out quickly and then decelerates.
-        TimeInterpolator sDecelerator = new DecelerateInterpolator();
-
-        // Animate scale and translation to go from thumbnail to full size
-        img_head.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
-                translationX(0).translationY(0).setInterpolator(sDecelerator);
-
-        // Fade in the black background
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mColorDrawable, "alpha", 0, 255);
-        bgAnim.setDuration(ANIM_DURATION);
-        bgAnim.start();
-    }
+//    public void enterAnimation() {
+//        img_head.setPivotX(0);
+//        img_head.setPivotY(0);
+//        img_head.setScaleX(mWidthScale);
+//        img_head.setScaleY(mHeightScale);
+//        img_head.setTranslationX(mLeftDelta);
+//        img_head.setTranslationY(mTopDelta);
+//
+//        // interpolator where the rate of change starts out quickly and then decelerates.
+//        TimeInterpolator sDecelerator = new DecelerateInterpolator();
+//
+//        // Animate scale and translation to go from thumbnail to full size
+//        img_head.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
+//                translationX(0).translationY(0).setInterpolator(sDecelerator);
+//
+//        // Fade in the black background
+//        ObjectAnimator bgAnim = ObjectAnimator.ofInt(mColorDrawable, "alpha", 0, 255);
+//        bgAnim.setDuration(ANIM_DURATION);
+//        bgAnim.start();
+//    }
 
     public void exitAnimation(final Runnable endAction) {
         TimeInterpolator sInterpolator = new AccelerateInterpolator();

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(String id, Throwable throwable) {
             }
         };
-        Uri uri = Uri.parse(Photo.images[0]);
+        Uri uri = Uri.parse(Photo.images[2]);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(controllerListener)
                 .setUri(uri)
