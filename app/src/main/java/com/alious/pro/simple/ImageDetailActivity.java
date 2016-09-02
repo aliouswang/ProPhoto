@@ -5,13 +5,22 @@ import android.animation.TimeInterpolator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 
 /**
@@ -21,7 +30,7 @@ import android.widget.ImageView;
  */
 public class ImageDetailActivity extends Activity{
 
-    private ImageView img_head;
+    private ScaleSimpleDraweeView img_head;
     private View main_background;
 
     private ColorDrawable mColorDrawable;
@@ -32,6 +41,7 @@ public class ImageDetailActivity extends Activity{
     private int mTopDelta;
     private float mWidthScale;
     private float mHeightScale;
+    private float mScale;
 
     private int thumbnailTop;
     private int thumbnailLeft;
@@ -56,6 +66,34 @@ public class ImageDetailActivity extends Activity{
                 public boolean onPreDraw() {
                     img_head.getViewTreeObserver().removeOnPreDrawListener(this);
 
+
+                    ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+                        @Override
+                        public void onFinalImageSet(
+                                String id,
+                                @Nullable ImageInfo imageInfo,
+                                @Nullable Animatable anim) {
+                            if (imageInfo == null) {
+                                return;
+                            }
+                            img_head.setScale((float) imageInfo.getHeight() / (float) imageInfo.getWidth());
+                        }
+
+                        @Override
+                        public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+                        }
+
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+                        }
+                    };
+                    Uri uri = Uri.parse(Photo.images[0]);
+                    DraweeController controller = Fresco.newDraweeControllerBuilder()
+                            .setControllerListener(controllerListener)
+                            .setUri(uri)
+                            .build();
+                    img_head.setController(controller);
+
                     // Figure out where the thumbnail and full size versions are, relative
                     // to the screen and each other
                     int[] screenLocation = new int[2];
@@ -63,8 +101,18 @@ public class ImageDetailActivity extends Activity{
                     mLeftDelta = thumbnailLeft - screenLocation[0];
                     mTopDelta = thumbnailTop - screenLocation[1];
 
-                    int measureWidth = img_head.getMeasuredWidth();
-                    int measureHeight = img_head.getMeasuredHeight();
+                    float measureWidth = img_head.getMeasuredWidth();
+                    float measureHeight = img_head.getMeasuredHeight();
+
+                    Log.e("prophoto", "left:" + screenLocation[0]
+                            + ";top:" + screenLocation[1]
+                            + ";mLeftDelta:" + mTopDelta
+                            + ";mTopDelta:" + mTopDelta
+                            + ";measureWidth:" + measureWidth
+                            + ";mearuseHeight:" + measureHeight
+                            + ";scale:" + mScale
+                    );
+
 
                     // Scale factors to make the large version the same size as the thumbnail
                     mWidthScale = (float) thumbnailWidth / measureWidth;
@@ -85,12 +133,13 @@ public class ImageDetailActivity extends Activity{
         thumbnailLeft = bundle.getInt("left");
         thumbnailWidth = bundle.getInt("width");
         thumbnailHeight = bundle.getInt("height");
+        mScale = bundle.getFloat("scale");
     }
 
     private void initView() {
         main_background = findViewById(R.id.main_background);
-        img_head = (ImageView) findViewById(R.id.img_head);
-
+        img_head = (ScaleSimpleDraweeView) findViewById(R.id.img_head);
+        img_head.setScale(mScale);
         mColorDrawable = new ColorDrawable(Color.BLACK);
         main_background.setBackgroundDrawable(mColorDrawable);
 
@@ -135,6 +184,7 @@ public class ImageDetailActivity extends Activity{
         exitAnimation(new Runnable() {
             public void run() {
                 finish();
+                overridePendingTransition(0, 0);
             }
         });
     }

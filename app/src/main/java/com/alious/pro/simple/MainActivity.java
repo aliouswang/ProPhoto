@@ -1,16 +1,26 @@
 package com.alious.pro.simple;
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView img_head;
+    private ScaleSimpleDraweeView img_head;
     private Button btn_start;
+    private float mScale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +31,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        img_head = (ImageView) findViewById(R.id.img_head);
+        img_head = (ScaleSimpleDraweeView) findViewById(R.id.img_head);
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(
+                    String id,
+                    @Nullable ImageInfo imageInfo,
+                    @Nullable Animatable anim) {
+                if (imageInfo == null) {
+                    return;
+                }
+                mScale = (float) imageInfo.getHeight() / (float) imageInfo.getWidth();
+            }
+
+            @Override
+            public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+            }
+        };
+        Uri uri = Uri.parse(Photo.images[0]);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(controllerListener)
+                .setUri(uri)
+                .build();
+        img_head.setController(controller);
+
         img_head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,8 +69,16 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("left", screenLocation[0]).
                         putExtra("top", screenLocation[1]).
                         putExtra("width", img_head.getWidth()).
-                        putExtra("height", img_head.getHeight());
+                        putExtra("height", img_head.getHeight()).
+                        putExtra("scale", mScale)
+                ;
+                Log.e("prophoto", "left:" + screenLocation[0]
+                        + ";top:" + screenLocation[1]
+                        + ";width:" + img_head.getWidth()
+                        + ";height:" + img_head.getHeight()
+                );
                 startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
 

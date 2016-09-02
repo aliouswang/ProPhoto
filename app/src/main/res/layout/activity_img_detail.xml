@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/main_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ImageView
+    <com.alious.pro.simple.ScaleSimpleDraweeView
         android:id="@+id/img_head"
-        android:src="@drawable/view_one"
-        android:scaleType="fitCenter"
+        fresco:actualImageScaleType="centerCrop"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="80dp"/>
 
-</FrameLayout>
+</RelativeLayout>
