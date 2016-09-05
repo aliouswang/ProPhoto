@@ -58,5 +58,4 @@ public class ScaleSimpleDraweeView extends SimpleDraweeView {
 
         setMeasuredDimension((int)width, (int)height);
     }
-
 }

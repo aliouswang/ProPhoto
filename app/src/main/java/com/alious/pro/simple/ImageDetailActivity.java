@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,9 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -56,6 +60,8 @@ public class ImageDetailActivity extends Activity{
 
     private int screenHeight;
     private int screenWidth;
+
+    private ViewPager view_pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +188,12 @@ public class ImageDetailActivity extends Activity{
                 translateSet.setDuration(0).start();
             }
         });
+
+        view_pager = (ViewPager) findViewById(R.id.view_pager);
+        view_pager.setVisibility(View.GONE);
+        FrescoPhotoPageAdapter photoPageAdapter = new
+                FrescoPhotoPageAdapter((ArrayList<String>) Arrays.asList(Photo.images));
+        view_pager.setAdapter(photoPageAdapter);
     }
 
     public void enterValueAnimation() {
@@ -205,6 +217,29 @@ public class ImageDetailActivity extends Activity{
         animatorSet.setInterpolator(interpolator);
         animatorSet.setStartDelay(10);
         animatorSet.setDuration(ANIM_DURATION).start();
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                view_pager.setVisibility(View.VISIBLE);
+                img_head.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
     }
 
     private static class ViewWrapper {
