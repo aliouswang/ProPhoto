@@ -23,6 +23,10 @@ public class NineGridViewGroup extends ViewGroup{
     private int mVerticalGap;
     private float mRatio;
 
+    private int mCellSize;
+    private int mRowCount;
+    private int mColumnCount;
+
     private INineGridAdapter mGridAdapter;
 
     public NineGridViewGroup(Context context) {
@@ -65,6 +69,10 @@ public class NineGridViewGroup extends ViewGroup{
         }else return false;
     }
 
+    public int getCount() {
+        return mGridAdapter != null ? mGridAdapter.getCount() : 0;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -73,7 +81,11 @@ public class NineGridViewGroup extends ViewGroup{
         if (mGridAdapter.getCount() <= 0) {
             setMeasuredDimension(sWidth, sHeight);
         }else {
-
+            int totalSpace = sWidth - getPaddingLeft() - getPaddingRight();
+            if (isSingle()) {
+                mCellSize = totalSpace;
+            }else {
+            }
         }
     }
 
