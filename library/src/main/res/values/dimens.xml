@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="default_horizontal_gap">5dp</dimen>
+    <dimen name="default_vertical_gap">5dp</dimen>
+
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="NineGridViewGroup">
+
+        <attr name="maxSize" format="integer"/>
+        <attr name="horizontal_gap" format="dimension"/>
+        <attr name="vertical_gap" format="dimension"/>
+        <attr name="ratio" format="float"/>
+
+    </declare-styleable>
+
+</resources>
