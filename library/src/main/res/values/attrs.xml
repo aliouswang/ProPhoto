@@ -4,6 +4,7 @@
     <declare-styleable name="NineGridViewGroup">
 
         <attr name="maxSize" format="integer"/>
+        <attr name="columnSize" format="integer"/>
         <attr name="horizontal_gap" format="dimension"/>
         <attr name="vertical_gap" format="dimension"/>
         <attr name="ratio" format="float"/>
