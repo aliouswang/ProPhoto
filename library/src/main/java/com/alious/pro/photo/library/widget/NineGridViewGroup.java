@@ -3,6 +3,7 @@ package com.alious.pro.photo.library.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
@@ -27,7 +28,8 @@ public class NineGridViewGroup extends ViewGroup{
     private int mVerticalGap;
     private float mRatio;
 
-    private int mCellSize;
+    private float mCellWidth;
+    private float mCellHeight;
     private int mRowCount;
     private int mColumnCount;
 
@@ -113,11 +115,11 @@ public class NineGridViewGroup extends ViewGroup{
         }else {
             int totalSpace = sWidth - getPaddingLeft() - getPaddingRight();
             if (isSingle()) {
-                mCellSize = totalSpace;
+                mCellWidth = totalSpace;
             }else {
-                mCellSize = (totalSpace - mHorizontalGap * (mColumnSize - 1)) / mColumnSize;
+                mCellWidth = (totalSpace - mHorizontalGap * (mColumnSize - 1)) / mColumnSize;
             }
-            float mCellHeight = mCellSize * mRatio;
+            mCellHeight = mCellWidth * mRatio;
             float totalHeight = mCellHeight * mRowCount + getPaddingTop() + getPaddingBottom()
                     + (mRowCount - 1) * mVerticalGap;
             setMeasuredDimension(sWidth, (int)totalHeight);
@@ -125,8 +127,15 @@ public class NineGridViewGroup extends ViewGroup{
     }
 
     @Override
-    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-
+    protected void onLayout(boolean b, int l, int i1, int i2, int i3) {
+        int count = getCount();
+        if (count <= 0) return;
+        for (int i = 0; i < count; i++) {
+            View childView = getChildAt(i);
+            float left = getPointByPosition(i).column * (mCellWidth + mHorizontalGap) + getPaddingLeft();
+            float top = getPointByPosition(i).row * (mCellHeight + mVerticalGap) + getPaddingTop();
+            childView.layout((int)left, (int)top, (int)(left + mCellWidth), (int)(top + mCellHeight));
+        }
     }
 
     private class Point {
