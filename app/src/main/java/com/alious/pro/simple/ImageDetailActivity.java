@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -29,7 +29,6 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -122,7 +121,7 @@ public class ImageDetailActivity extends Activity{
                         public void onFailure(String id, Throwable throwable) {
                         }
                     };
-                    Uri uri = Uri.parse(Photo.images[2]);
+                    Uri uri = Uri.parse(Photo.images[0]);
                     DraweeController controller = Fresco.newDraweeControllerBuilder()
                             .setControllerListener(controllerListener)
                             .setUri(uri)
@@ -192,12 +191,13 @@ public class ImageDetailActivity extends Activity{
         view_pager = (ViewPager) findViewById(R.id.view_pager);
         view_pager.setVisibility(View.GONE);
         FrescoPhotoPageAdapter photoPageAdapter = new
-                FrescoPhotoPageAdapter((ArrayList<String>) Arrays.asList(Photo.images));
+                FrescoPhotoPageAdapter(Arrays.asList(Photo.images));
         view_pager.setAdapter(photoPageAdapter);
     }
 
     public void enterValueAnimation() {
-        LinearInterpolator interpolator = new LinearInterpolator();
+
+        AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
         ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
@@ -227,7 +227,7 @@ public class ImageDetailActivity extends Activity{
             @Override
             public void onAnimationEnd(Animator animator) {
                 view_pager.setVisibility(View.VISIBLE);
-                img_head.setVisibility(View.GONE);
+//                img_head.setVisibility(View.GONE);
             }
 
             @Override
@@ -298,7 +298,8 @@ public class ImageDetailActivity extends Activity{
 //                translationX(mLeftDelta).translationY(mTopDelta)
 //                .setInterpolator(sInterpolator).withEndAction(endAction);
 
-        LinearInterpolator interpolator = new LinearInterpolator();
+        view_pager.setVisibility(View.GONE);
+        AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
         ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
