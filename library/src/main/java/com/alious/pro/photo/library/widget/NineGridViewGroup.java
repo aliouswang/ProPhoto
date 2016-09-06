@@ -7,8 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
-import com.alious.pro.photo.library.interfaces.INineGridAdapter;
-import com.alious.pro.photo.library.utils.ImageLoadUtil;
+import com.alious.pro.photo.library.interfaces.NineGridDataSource;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
  *
  * Created by aliouswang on 16/9/5.
  */
-public class NineGridViewGroup extends ViewGroup{
+public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
 
     public static final int DEFAULT_MAX_SIZE = 9;
     public static final int DEFAULT_COLUMN_SIZE = 3;
@@ -35,7 +34,7 @@ public class NineGridViewGroup extends ViewGroup{
 
     private ArrayList<Point> mPoints;
 
-    private INineGridAdapter mGridAdapter;
+    private NineGridDataSource mGridAdapter;
 
     public NineGridViewGroup(Context context) {
         this(context, null);
@@ -63,15 +62,24 @@ public class NineGridViewGroup extends ViewGroup{
         typedArray.recycle();
     }
 
-    public void setGridAdapter(INineGridAdapter gridAdapter) {
+    public void setGridAdapter(NineGridDataSource gridAdapter) {
         mGridAdapter = gridAdapter;
         calculateCellPoint();
-//        reuseChildrenView();
+        reuseChildrenView();
         requestLayout();
     }
 
-
-
+    private void reuseChildrenView() {
+        int currentChildrenCount = getChildCount();
+        int count = getCount();
+        if (currentChildrenCount > count) {
+            removeViews(count, currentChildrenCount - count);
+        }else if (currentChildrenCount < count){
+            for (int i = 0; i < count - currentChildrenCount; i ++) {
+                addView(generateChildView(i + currentChildrenCount));
+            }
+        }
+    }
 
     private void calculateCellPoint() {
         int count = getCount();
@@ -109,7 +117,7 @@ public class NineGridViewGroup extends ViewGroup{
     }
 
     public String getUrlByPosition(int pos) {
-        return mGridAdapter != null ? mGridAdapter.getUrlByPosition(pos) : "";
+        return mGridAdapter != null ? mGridAdapter.getItem(pos).getNineImageUrl() : "";
     }
 
     @Override
@@ -136,8 +144,8 @@ public class NineGridViewGroup extends ViewGroup{
     @Override
     protected void onLayout(boolean b, int l, int i1, int i2, int i3) {
         int count = getCount();
-        if (count <= 0) return;
-        reuseChildrenView();
+        if (count <= 0 || getChildCount() < count) return;
+//        reuseChildrenView();
         for (int i = 0; i < count; i++) {
             View childView = getChildAt(i);
             float left = getPointByPosition(i).column * (mCellWidth + mHorizontalGap) + getPaddingLeft();
@@ -146,23 +154,14 @@ public class NineGridViewGroup extends ViewGroup{
         }
     }
 
-    private void reuseChildrenView() {
-        int currentChildrenCount = getChildCount();
-        int count = getCount();
-        if (currentChildrenCount > count) {
-            removeViews(count, currentChildrenCount - count);
-        }else if (currentChildrenCount < count){
-            for (int i = 0; i < count - currentChildrenCount; i ++) {
-                addView(generateChildView(i + currentChildrenCount));
-            }
-        }
-    }
+    protected abstract T generateChildView(int pos);
 
-    protected ScaleSimpleDraweeView generateChildView(int pos) {
-        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
-        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
-        return simpleDraweeView;
-    }
+    protected abstract void loadImage(T t, String imageUrl);
+//    {
+//        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
+//        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
+//        return simpleDraweeView;
+//    }
 
     private class Point {
         int row;

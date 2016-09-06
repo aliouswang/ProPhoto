@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.alious.pro.photo.library.adapter.DefaultNineImageAdapter;
-import com.alious.pro.photo.library.widget.NineGridViewGroup;
+import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_start;
     private float mScale;
 
-    private NineGridViewGroup nine_grid;
+    private NineFrescoGridViewGroup nine_grid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         DefaultNineImageAdapter<Data> defaultNineImageAdapter =
                 new DefaultNineImageAdapter(datas);
-        nine_grid = (NineGridViewGroup) findViewById(R.id.nine_grid);
+        nine_grid = (NineFrescoGridViewGroup) findViewById(R.id.nine_grid);
         nine_grid.setGridAdapter(defaultNineImageAdapter);
     }
 }
