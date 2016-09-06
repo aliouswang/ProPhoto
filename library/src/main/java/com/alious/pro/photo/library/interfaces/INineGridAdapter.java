@@ -1,9 +1,11 @@
 package com.alious.pro.photo.library.interfaces;
 
-public interface INineGridAdapter {
+public interface INineGridAdapter<T extends NineImageUrl> {
 
     int getCount();
 
-    String getUrlByPosition(int position);
+    T getItem(int position);
+
+    void onItemClicked(T t, int position);
 
 }

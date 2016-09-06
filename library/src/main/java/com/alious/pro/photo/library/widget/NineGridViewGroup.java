@@ -24,15 +24,14 @@ public class NineGridViewGroup extends ViewGroup{
     public static final float DEFAULT_RATIO = 1.0f;
 
     private int mMaxSize;
-    private int mColumnSize;
+    private int mRowCount;
+    private int mColumnCount;
     private int mHorizontalGap;
     private int mVerticalGap;
     private float mRatio;
 
     private float mCellWidth;
     private float mCellHeight;
-    private int mRowCount;
-    private int mColumnCount;
 
     private ArrayList<Point> mPoints;
 
@@ -53,7 +52,7 @@ public class NineGridViewGroup extends ViewGroup{
                 R.styleable.NineGridViewGroup);
         this.mMaxSize = typedArray.getInt(R.styleable.NineGridViewGroup_maxSize,
                 DEFAULT_MAX_SIZE);
-        this.mColumnSize = typedArray.getInt(R.styleable.NineGridViewGroup_columnSize,
+        this.mColumnCount = typedArray.getInt(R.styleable.NineGridViewGroup_columnSize,
                 DEFAULT_COLUMN_SIZE);
         this.mHorizontalGap = typedArray.getDimensionPixelSize(R.styleable.NineGridViewGroup_horizontal_gap,
                 getResources().getDimensionPixelSize(R.dimen.default_horizontal_gap));
@@ -67,27 +66,11 @@ public class NineGridViewGroup extends ViewGroup{
     public void setGridAdapter(INineGridAdapter gridAdapter) {
         mGridAdapter = gridAdapter;
         calculateCellPoint();
-        reuseChildrenView();
+//        reuseChildrenView();
         requestLayout();
     }
 
-    private void reuseChildrenView() {
-        int currentChildrenCount = getChildCount();
-        int count = getCount();
-        if (currentChildrenCount > count) {
-            removeViews(count, currentChildrenCount - count);
-        }else if (currentChildrenCount < count){
-            for (int i = 0; i < currentChildrenCount - count; i ++) {
-                addView(generateChildView(i + count));
-            }
-        }
-    }
 
-    protected ScaleSimpleDraweeView generateChildView(int pos) {
-        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
-        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
-        return simpleDraweeView;
-    }
 
 
     private void calculateCellPoint() {
@@ -96,12 +79,11 @@ public class NineGridViewGroup extends ViewGroup{
             mPoints = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 Point point = new Point();
-                point.row = i % mColumnSize;
-                point.column = i / mColumnSize;
+                point.row = i % mColumnCount;
+                point.column = i / mColumnCount;
                 mPoints.add(point);
             }
-            mColumnCount = mColumnSize;
-            mRowCount = (int) Math.ceil(count / mColumnSize);
+            mRowCount = (int) Math.ceil(count / mColumnCount);
         }else {
             mPoints = new ArrayList<>();
         }
@@ -142,7 +124,7 @@ public class NineGridViewGroup extends ViewGroup{
             if (isSingle()) {
                 mCellWidth = totalSpace;
             }else {
-                mCellWidth = (totalSpace - mHorizontalGap * (mColumnSize - 1)) / mColumnSize;
+                mCellWidth = (totalSpace - mHorizontalGap * (mColumnCount - 1)) / mColumnCount;
             }
             mCellHeight = mCellWidth * mRatio;
             float totalHeight = mCellHeight * mRowCount + getPaddingTop() + getPaddingBottom()
@@ -155,12 +137,31 @@ public class NineGridViewGroup extends ViewGroup{
     protected void onLayout(boolean b, int l, int i1, int i2, int i3) {
         int count = getCount();
         if (count <= 0) return;
+        reuseChildrenView();
         for (int i = 0; i < count; i++) {
             View childView = getChildAt(i);
             float left = getPointByPosition(i).column * (mCellWidth + mHorizontalGap) + getPaddingLeft();
             float top = getPointByPosition(i).row * (mCellHeight + mVerticalGap) + getPaddingTop();
             childView.layout((int)left, (int)top, (int)(left + mCellWidth), (int)(top + mCellHeight));
         }
+    }
+
+    private void reuseChildrenView() {
+        int currentChildrenCount = getChildCount();
+        int count = getCount();
+        if (currentChildrenCount > count) {
+            removeViews(count, currentChildrenCount - count);
+        }else if (currentChildrenCount < count){
+            for (int i = 0; i < count - currentChildrenCount; i ++) {
+                addView(generateChildView(i + currentChildrenCount));
+            }
+        }
+    }
+
+    protected ScaleSimpleDraweeView generateChildView(int pos) {
+        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
+        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
+        return simpleDraweeView;
     }
 
     private class Point {
