@@ -79,6 +79,9 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
                 addView(generateChildView(i + currentChildrenCount));
             }
         }
+        for (int i = 0; i < count; i ++) {
+            loadImage((T) getChildAt(i), getUrlByPosition(i));
+        }
     }
 
     private void calculateCellPoint() {
