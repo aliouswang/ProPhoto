@@ -11,4 +11,10 @@
 
     </declare-styleable>
 
+    <declare-styleable name="ScaleImageView">
+        <attr name="siv_scale" format="float"/>
+        <attr name="reverse" format="boolean"/>
+    </declare-styleable>
+
+
 </resources>

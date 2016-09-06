@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.INineGridAdapter;
+import com.alious.pro.photo.library.utils.ImageLoadUtil;
 
 import java.util.ArrayList;
 
@@ -66,8 +67,28 @@ public class NineGridViewGroup extends ViewGroup{
     public void setGridAdapter(INineGridAdapter gridAdapter) {
         mGridAdapter = gridAdapter;
         calculateCellPoint();
+        reuseChildrenView();
         requestLayout();
     }
+
+    private void reuseChildrenView() {
+        int currentChildrenCount = getChildCount();
+        int count = getCount();
+        if (currentChildrenCount > count) {
+            removeViews(count, currentChildrenCount - count);
+        }else if (currentChildrenCount < count){
+            for (int i = 0; i < currentChildrenCount - count; i ++) {
+                addView(generateChildView(i + count));
+            }
+        }
+    }
+
+    protected ScaleSimpleDraweeView generateChildView(int pos) {
+        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
+        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
+        return simpleDraweeView;
+    }
+
 
     private void calculateCellPoint() {
         int count = getCount();
@@ -103,6 +124,10 @@ public class NineGridViewGroup extends ViewGroup{
 
     public int getCount() {
         return mGridAdapter != null ? mGridAdapter.getCount() : 0;
+    }
+
+    public String getUrlByPosition(int pos) {
+        return mGridAdapter != null ? mGridAdapter.getUrlByPosition(pos) : "";
     }
 
     @Override
