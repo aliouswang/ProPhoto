@@ -92,7 +92,7 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
 
                 @Override
                 public void onClick(View view) {
-                    mGridDelegate.onItemClicked(view, mGridAdapter.getItem(index));
+                    mGridDelegate.onItemClicked(view, mGridAdapter.getItem(index), index);
                 }
             });
         }
@@ -176,7 +176,7 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     protected abstract void loadImage(T t, String imageUrl);
 //    {
 //        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
-//        ImageLoadUtil.loadWithFresco(simpleDraweeView, getUrlByPosition(pos));
+//        ImageLoadUtil.loadScaleWithFresco(simpleDraweeView, getUrlByPosition(pos));
 //        return simpleDraweeView;
 //    }
 

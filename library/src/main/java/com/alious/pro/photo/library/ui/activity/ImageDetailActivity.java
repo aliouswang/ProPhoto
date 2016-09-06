@@ -7,12 +7,9 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -22,16 +19,13 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 
 import com.alious.pro.photo.library.Photo;
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
+import com.alious.pro.photo.library.utils.ImageLoadUtil;
 import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.util.Arrays;
 
@@ -56,15 +50,30 @@ public class ImageDetailActivity extends Activity{
     private float mHeightScale;
     private float mScale;
 
+    private String mImageUrl;
+
     private int thumbnailTop;
     private int thumbnailLeft;
     private int thumbnailWidth;
     private int thumbnailHeight;
 
+    private int mCurrentPosition;
+
     private int screenHeight;
     private int screenWidth;
 
     private ViewPager view_pager;
+
+    private void parseIntent(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        mImageUrl = bundle.getString("imageUrl");
+        thumbnailTop = bundle.getInt("top");
+        thumbnailLeft = bundle.getInt("left");
+        thumbnailWidth = bundle.getInt("width");
+        thumbnailHeight = bundle.getInt("height");
+        mCurrentPosition = bundle.getInt("position");
+        mScale = bundle.getFloat("scale");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,42 +114,20 @@ public class ImageDetailActivity extends Activity{
                     img_head.getViewTreeObserver().removeOnPreDrawListener(this);
 
 
-                    ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
-                        @Override
-                        public void onFinalImageSet(
-                                String id,
-                                @Nullable ImageInfo imageInfo,
-                                @Nullable Animatable anim) {
-                            if (imageInfo == null) {
-                                return;
-                            }
-//                            img_head.setScale((float) imageInfo.getHeight() / (float) imageInfo.getWidth());
-                        }
+                    ImageLoadUtil.loadWithFresco(img_head, mImageUrl);
 
-                        @Override
-                        public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
-                        }
 
-                        @Override
-                        public void onFailure(String id, Throwable throwable) {
-                        }
-                    };
-                    Uri uri = Uri.parse(Photo.images[0]);
-                    DraweeController controller = Fresco.newDraweeControllerBuilder()
-                            .setControllerListener(controllerListener)
-                            .setUri(uri)
-                            .build();
-                    img_head.setController(controller);
 
+                    float measureWidth = img_head.getMeasuredWidth();
+                    float measureHeight = img_head.getMeasuredHeight();
                     // Figure out where the thumbnail and full size versions are, relative
                     // to the screen and each other
                     int[] screenLocation = new int[2];
                     img_head.getLocationOnScreen(screenLocation);
+//                    mLeftDelta = thumbnailLeft - (int)(screenLocation[0] - (thumbnailWidth - measureWidth)/2);
+//                    mTopDelta = thumbnailTop - (int)(screenLocation[1] - - (thumbnailWidth - measureWidth)/2);
                     mLeftDelta = thumbnailLeft - screenLocation[0];
                     mTopDelta = thumbnailTop - screenLocation[1];
-
-                    float measureWidth = img_head.getMeasuredWidth();
-                    float measureHeight = img_head.getMeasuredHeight();
 
                     Log.e("prophoto", "left:" + screenLocation[0]
                             + ";top:" + screenLocation[1]
@@ -151,10 +138,22 @@ public class ImageDetailActivity extends Activity{
                             + ";scale:" + mScale
                     );
 
-
                     // Scale factors to make the large version the same size as the thumbnail
-                    mWidthScale = (float) thumbnailWidth / measureWidth;
-                    mHeightScale = (float) thumbnailHeight / measureHeight;
+                    mWidthScale = (float) thumbnailWidth / (float)measureWidth;
+                    mHeightScale = (float) thumbnailHeight / (float)measureHeight;
+
+
+                    AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+                    ViewWrapper viewWrapper = new ViewWrapper(img_head);
+
+                    ValueAnimator animator2 =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
+                    ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+                    ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+                    AnimatorSet translateSet = new AnimatorSet();
+                    translateSet.playTogether(translateX, translateY, animator2);
+                    translateSet.setDuration(0).start();
+
+
 
                     enterValueAnimation();
 
@@ -165,14 +164,7 @@ public class ImageDetailActivity extends Activity{
         }
     }
 
-    private void parseIntent(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        thumbnailTop = bundle.getInt("top");
-        thumbnailLeft = bundle.getInt("left");
-        thumbnailWidth = bundle.getInt("width");
-        thumbnailHeight = bundle.getInt("height");
-        mScale = bundle.getFloat("scale");
-    }
+
 
     private void initView() {
         main_background = findViewById(R.id.main_background);
@@ -184,19 +176,26 @@ public class ImageDetailActivity extends Activity{
         img_head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
-                ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
-                AnimatorSet translateSet = new AnimatorSet();
-                translateSet.playTogether(translateX, translateY);
-                translateSet.setDuration(0).start();
+//                ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+//                ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+//                AnimatorSet translateSet = new AnimatorSet();
+//                translateSet.playTogether(translateX, translateY);
+//                translateSet.setDuration(0).start();
             }
         });
+
+        FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams) img_head.getLayoutParams();
+        flp.width = thumbnailWidth;
+        flp.height = thumbnailHeight;
+        img_head.setLayoutParams(flp);
+        img_head.requestLayout();
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
         view_pager.setVisibility(View.GONE);
         FrescoPhotoPageAdapter photoPageAdapter = new
                 FrescoPhotoPageAdapter(Arrays.asList(Photo.images));
         view_pager.setAdapter(photoPageAdapter);
+        view_pager.setCurrentItem(mCurrentPosition);
     }
 
     public void enterValueAnimation() {
@@ -204,11 +203,15 @@ public class ImageDetailActivity extends Activity{
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
-        ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
-        ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
-        AnimatorSet translateSet = new AnimatorSet();
-        translateSet.playTogether(translateX, translateY);
-        translateSet.setDuration(0).start();
+//        ValueAnimator scaleAnimator2 =
+//                ObjectAnimator.ofFloat(viewWrapper, "simpleScale", 1, mWidthScale);
+
+//        ValueAnimator animator2 =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
+//        ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
+//        ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
+//        AnimatorSet translateSet = new AnimatorSet();
+//        translateSet.playTogether(translateX, translateY, animator2);
+//        translateSet.setDuration(0).start();
 
         ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", screenWidth);
         ValueAnimator scaleAnimator =

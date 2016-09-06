@@ -7,6 +7,6 @@ import android.view.View;
  */
 public interface NineGridDelegate<T extends NineImageUrl> {
 
-    void onItemClicked(View view, T t);
+    void onItemClicked(View view, T t, int pos);
 
 }

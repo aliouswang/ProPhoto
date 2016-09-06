@@ -18,7 +18,7 @@ public class ImageLoadUtil {
         draweeView.setImageURI(Uri.parse(imageUrl + ""));
     }
 
-    public static void loadWithFresco(final ScaleSimpleDraweeView scaleDraweeView, String imageUrl) {
+    public static void loadScaleWithFresco(final ScaleSimpleDraweeView scaleDraweeView, String imageUrl) {
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(

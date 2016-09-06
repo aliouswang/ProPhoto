@@ -40,7 +40,7 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
                 .inflate(R.layout.view_pager_preview, null);
         final ScaleSimpleDraweeView img_head = (ScaleSimpleDraweeView) rootView.findViewById(R.id.img_head);
         container.addView(rootView);
-//        ImageLoadUtil.loadWithFresco(imageView, mPreviewImages.get(position));
+//        ImageLoadUtil.loadScaleWithFresco(imageView, mPreviewImages.get(position));
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(

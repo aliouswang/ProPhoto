@@ -1,7 +1,5 @@
 package com.alious.pro.photo.library.adapter;
 
-import android.view.View;
-
 import com.alious.pro.photo.library.interfaces.NineGridDataSource;
 import com.alious.pro.photo.library.interfaces.NineGridDelegate;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
@@ -58,9 +56,9 @@ public class DefaultNineImageAdapter<T extends NineImageUrl>
         return getDataSources() != null ? getDataSources().get(position) : null;
     }
 
-    public void onItemClicked(View view, T t) {
-        if (this.mNineGridDelegate != null) {
-            this.mNineGridDelegate.onItemClicked(view, t);
-        }
-    }
+//    public void onItemClicked(View view, T t) {
+//        if (this.mNineGridDelegate != null) {
+//            this.mNineGridDelegate.onItemClicked(view, t);
+//        }
+//    }
 }

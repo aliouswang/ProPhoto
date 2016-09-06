@@ -29,7 +29,7 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<ScaleSimpleDrawee
 
     @Override
     protected void loadImage(ScaleSimpleDraweeView scaleSimpleDraweeView, String imageUrl) {
-        ImageLoadUtil.loadWithFresco(scaleSimpleDraweeView,
+        ImageLoadUtil.loadScaleWithFresco(scaleSimpleDraweeView,
                 imageUrl);
     }
 }
