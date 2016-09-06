@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.alious.pro.simple.ScaleSimpleDraweeView
+    <com.alious.pro.photo.library.widget.ScaleSimpleDraweeView
         android:id="@+id/img_head"
         fresco:actualImageScaleType="centerCrop"
         android:layout_gravity="center"

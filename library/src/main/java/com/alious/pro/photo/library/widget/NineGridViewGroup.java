@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineGridDataSource;
+import com.alious.pro.photo.library.interfaces.NineGridDelegate;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     private ArrayList<Point> mPoints;
 
     private NineGridDataSource mGridAdapter;
+    private NineGridDelegate mGridDelegate;
 
     public NineGridViewGroup(Context context) {
         this(context, null);
@@ -69,6 +71,10 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
         requestLayout();
     }
 
+    public void setGridDelegate(NineGridDelegate gridDelegate) {
+        this.mGridDelegate = gridDelegate;
+    }
+
     private void reuseChildrenView() {
         int currentChildrenCount = getChildCount();
         int count = getCount();
@@ -81,6 +87,14 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
         }
         for (int i = 0; i < count; i ++) {
             loadImage((T) getChildAt(i), getUrlByPosition(i));
+            final int index = i;
+            getChildAt(i).setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    mGridDelegate.onItemClicked(view, mGridAdapter.getItem(index));
+                }
+            });
         }
     }
 

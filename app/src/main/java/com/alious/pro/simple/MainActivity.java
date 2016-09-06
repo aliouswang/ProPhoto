@@ -11,7 +11,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.alious.pro.photo.library.adapter.DefaultNineImageAdapter;
+import com.alious.pro.photo.library.interfaces.NineGridDelegate;
+import com.alious.pro.photo.library.interfaces.NineImageUrl;
+import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
 import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
+import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -86,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(0, 0);
 
-
-
             }
         });
 
@@ -108,7 +110,47 @@ public class MainActivity extends AppCompatActivity {
 
         DefaultNineImageAdapter<Data> defaultNineImageAdapter =
                 new DefaultNineImageAdapter(datas);
+        defaultNineImageAdapter.setNineGridDelegate(new NineGridDelegate<Data>() {
+            @Override
+            public void onItemClicked(View view, Data data) {
+                int[] screenLocation = new int[2];
+                view.getLocationOnScreen(screenLocation);
+                Intent intent = new Intent(MainActivity.this, ImageDetailActivity.class);
+                intent.putExtra("left", screenLocation[0]).
+                        putExtra("top", screenLocation[1]).
+                        putExtra("width", view.getWidth()).
+                        putExtra("height", view.getHeight()).
+                        putExtra("scale", ((ScaleSimpleDraweeView)view).getScale());
+                Log.e("prophoto", "left:" + screenLocation[0]
+                        + ";top:" + screenLocation[1]
+                        + ";width:" + view.getWidth()
+                        + ";height:" + view.getHeight()
+                );
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
         nine_grid = (NineFrescoGridViewGroup) findViewById(R.id.nine_grid);
         nine_grid.setGridAdapter(defaultNineImageAdapter);
+        nine_grid.setGridDelegate(new NineGridDelegate() {
+            @Override
+            public void onItemClicked(View view, NineImageUrl nineImageUrl) {
+                int[] screenLocation = new int[2];
+                view.getLocationOnScreen(screenLocation);
+                Intent intent = new Intent(MainActivity.this, ImageDetailActivity.class);
+                intent.putExtra("left", screenLocation[0]).
+                        putExtra("top", screenLocation[1]).
+                        putExtra("width", view.getWidth()).
+                        putExtra("height", view.getHeight()).
+                        putExtra("scale", ((ScaleSimpleDraweeView)view).getScale());
+                Log.e("prophoto", "left:" + screenLocation[0]
+                        + ";top:" + screenLocation[1]
+                        + ";width:" + view.getWidth()
+                        + ";height:" + view.getHeight()
+                );
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
     }
 }
