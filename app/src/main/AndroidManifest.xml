@@ -17,9 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ImageDetailActivity"
-            android:theme="@style/Transparent"
-            ></activity>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

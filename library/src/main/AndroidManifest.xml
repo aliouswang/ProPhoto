@@ -7,6 +7,10 @@
         android:supportsRtl="true"
         >
 
+        <activity android:name=".ui.activity.ImageDetailActivity"
+                  android:theme="@style/Transparent"
+            ></activity>
+
     </application>
 
 </manifest>
