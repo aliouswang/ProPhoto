@@ -4,7 +4,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
+import com.alious.pro.photo.library.widget.RatioSimpleDraweeView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -18,7 +18,7 @@ public class ImageLoadUtil {
         draweeView.setImageURI(Uri.parse(imageUrl + ""));
     }
 
-    public static void loadScaleWithFresco(final ScaleSimpleDraweeView scaleDraweeView, String imageUrl) {
+    public static void loadScaleWithFresco(final RatioSimpleDraweeView scaleDraweeView, String imageUrl) {
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(

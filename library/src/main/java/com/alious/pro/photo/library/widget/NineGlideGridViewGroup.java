@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
+import com.alious.pro.photo.library.ui.activity.BaseImageDetailActivity;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -27,7 +27,7 @@ public class NineGlideGridViewGroup extends NineGridViewGroup<RatioImageView>{
 
     @Override
     protected void onItemClicked(View view, int index) {
-        getContext().startActivity(ImageDetailActivity.newIntent(getContext(),
+        getContext().startActivity(BaseImageDetailActivity.newIntent(getContext(),
                 view, index, mGridAdapter.getItemList(),
                 ((RatioImageView)view).getRatio()));
     }

@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import com.alious.pro.photo.library.adapter.DefaultNineImageAdapter;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
-import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
+import com.alious.pro.photo.library.ui.activity.BaseImageDetailActivity;
 import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
 import com.alious.pro.photo.library.widget.NineGlideGridViewGroup;
 import com.alious.pro.photo.library.widget.RatioImageView;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     imageUrls.add(data);
                 }
 
-                startActivity(ImageDetailActivity.newIntent(MainActivity.this,
+                startActivity(BaseImageDetailActivity.newIntent(MainActivity.this,
                         view, 7, imageUrls,
                         ((RatioImageView)view).getRatio()));
             }

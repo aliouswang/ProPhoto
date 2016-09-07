@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.alious.pro.photo.library.R;
+import com.alious.pro.photo.library.interfaces.IRatio;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -14,37 +15,27 @@ import com.facebook.drawee.view.SimpleDraweeView;
  *
  * Created by aliouswang on 16/6/29.
  */
-public class ScaleSimpleDraweeView extends SimpleDraweeView {
+public class RatioSimpleDraweeView extends SimpleDraweeView implements IRatio{
 
-    private float scale = 1.0f;
+    private float ratio = 1.0f;
     //if reverse , we set height align width
     private boolean reverse = false;
 
-    public ScaleSimpleDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
+    public RatioSimpleDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
     }
 
-    public ScaleSimpleDraweeView(Context context) {
+    public RatioSimpleDraweeView(Context context) {
         super(context);
     }
 
-    public ScaleSimpleDraweeView(Context context, AttributeSet attrs) {
+    public RatioSimpleDraweeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray t = context.obtainStyledAttributes(attrs,
                 R.styleable.ScaleImageView, 0, 0);
-        scale = t.getFloat(R.styleable.ScaleImageView_siv_scale, 1.0f);
+        ratio = t.getFloat(R.styleable.ScaleImageView_siv_scale, 1.0f);
         reverse = t.getBoolean(R.styleable.ScaleImageView_reverse, false);
         t.recycle();
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-        requestLayout();
-        invalidate();
-    }
-
-    public float getScale() {
-        return this.scale;
     }
 
 
@@ -53,11 +44,23 @@ public class ScaleSimpleDraweeView extends SimpleDraweeView {
         float width = View.MeasureSpec.getSize(widthMeasureSpec);
         float height = View.MeasureSpec.getSize(heightMeasureSpec);
         if (reverse) {
-            width = height * scale;
+            width = height * ratio;
         }else {
-            height = width * scale;
+            height = width * ratio;
         }
 
         setMeasuredDimension((int)width, (int)height);
+    }
+
+    @Override
+    public float getRatio() {
+        return this.ratio;
+    }
+
+    @Override
+    public void setRatio(float ratio) {
+        this.ratio = ratio;
+        requestLayout();
+        invalidate();
     }
 }

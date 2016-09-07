@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.alious.pro.photo.library.interfaces.IRatio;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 
 /**
  * Created by aliouswang on 16/9/7.
  */
-public class RatioImageView extends ImageView{
+public class RatioImageView extends ImageView implements IRatio{
 
     private float ratio = -1.0f;
 

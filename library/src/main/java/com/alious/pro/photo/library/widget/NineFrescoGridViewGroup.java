@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
+import com.alious.pro.photo.library.ui.activity.BaseImageDetailActivity;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 
 /**
  * Created by aliouswang on 16/9/6.
  */
-public class NineFrescoGridViewGroup extends NineGridViewGroup<ScaleSimpleDraweeView>{
+public class NineFrescoGridViewGroup extends NineGridViewGroup<RatioSimpleDraweeView>{
 
     public NineFrescoGridViewGroup(Context context) {
         super(context);
@@ -26,18 +26,18 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<ScaleSimpleDrawee
 
     @Override
     protected void onItemClicked(View view, int index) {
-        getContext().startActivity(ImageDetailActivity.newIntent(getContext(),
+        getContext().startActivity(BaseImageDetailActivity.newIntent(getContext(),
                 view, index, mGridAdapter.getItemList(),
-                ((ScaleSimpleDraweeView)view).getScale()));
+                ((RatioSimpleDraweeView)view).getRatio()));
     }
 
     @Override
-    protected ScaleSimpleDraweeView generateChildView(int pos) {
-        return new ScaleSimpleDraweeView(getContext());
+    protected RatioSimpleDraweeView generateChildView(int pos) {
+        return new RatioSimpleDraweeView(getContext());
     }
 
     @Override
-    protected void loadImage(ScaleSimpleDraweeView scaleSimpleDraweeView, String imageUrl) {
+    protected void loadImage(RatioSimpleDraweeView scaleSimpleDraweeView, String imageUrl) {
         ImageLoadUtil.loadScaleWithFresco(scaleSimpleDraweeView,
                 imageUrl);
     }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
-import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
+import com.alious.pro.photo.library.widget.RatioSimpleDraweeView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -39,7 +39,7 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, int position) {
         View rootView = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.view_pager_preview, null);
-        final ScaleSimpleDraweeView img_head = (ScaleSimpleDraweeView) rootView.findViewById(R.id.img_head);
+        final RatioSimpleDraweeView img_head = (RatioSimpleDraweeView) rootView.findViewById(R.id.img_head);
         container.addView(rootView);
 //        ImageLoadUtil.loadScaleWithFresco(imageView, mPreviewImages.get(position));
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
