@@ -23,9 +23,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.alious.pro.photo.library.widget.NineFrescoGridViewGroup
+    <!--<com.alious.pro.photo.library.widget.NineFrescoGridViewGroup-->
+        <!--android:id="@+id/nine_grid"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    <com.alious.pro.photo.library.widget.NineGlideGridViewGroup
         android:id="@+id/nine_grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

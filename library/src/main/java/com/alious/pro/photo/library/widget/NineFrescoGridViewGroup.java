@@ -2,7 +2,9 @@ package com.alious.pro.photo.library.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
+import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 
 /**
@@ -20,6 +22,13 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<ScaleSimpleDrawee
 
     public NineFrescoGridViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    protected void onItemClicked(View view, int index) {
+        getContext().startActivity(ImageDetailActivity.newIntent(getContext(),
+                view, index, mGridAdapter.getItemList(),
+                ((ScaleSimpleDraweeView)view).getScale()));
     }
 
     @Override

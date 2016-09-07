@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,24 +25,24 @@ import android.widget.FrameLayout;
 import com.alious.pro.photo.library.Photo;
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
+import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 
 /**
  * https://github.com/StackTipsLab/Android-GridView-Advance-Tutorial
- *
+ * <p/>
  * Created by aliouswang on 16/9/1.
  */
-public class ImageDetailActivity extends Activity{
+public class ImageDetailActivity extends Activity {
 
     private ScaleSimpleDraweeView img_head;
     private View main_background;
 
     private ColorDrawable mColorDrawable;
-
 
     private static final int ANIM_DURATION = 300;
     private int mLeftDelta;
@@ -64,15 +65,42 @@ public class ImageDetailActivity extends Activity{
 
     private ViewPager view_pager;
 
+    private ArrayList<NineImageUrl> mNineImageUrls;
+
+    public static final String LEFT_LOCATION = "left_location";
+    public static final String TOP_LOCATION = "right_location";
+    public static final String THUMBNAIL_WIDTH = "thumbnail_width";
+    public static final String THUMBNAIL_HEIGHT = "thumbnail_height";
+    public static final String CLICK_INDEX = "click_index";
+    public static final String THUMBNAIL_IMAGE_URLS = "thumbnail_image_urls";
+    public static final String THUMBNAIL_RATIO = "thumbnail_ratio";
+
+
+    public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
+                                   float ratio) {
+        int[] screenLocation = new int[2];
+        view.getLocationOnScreen(screenLocation);
+        Intent intent = new Intent(context, ImageDetailActivity.class);
+        intent.putExtra(LEFT_LOCATION, screenLocation[0]).
+                putExtra(TOP_LOCATION, screenLocation[1]).
+                putExtra(THUMBNAIL_WIDTH, view.getWidth()).
+                putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
+                putExtra(CLICK_INDEX, index).
+                putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
+                putExtra(THUMBNAIL_RATIO, ratio);
+        return intent;
+    }
+
     private void parseIntent(Intent intent) {
         Bundle bundle = intent.getExtras();
-        mImageUrl = bundle.getString("imageUrl");
-        thumbnailTop = bundle.getInt("top");
-        thumbnailLeft = bundle.getInt("left");
-        thumbnailWidth = bundle.getInt("width");
-        thumbnailHeight = bundle.getInt("height");
-        mCurrentPosition = bundle.getInt("position");
-        mScale = bundle.getFloat("scale");
+        thumbnailTop = bundle.getInt(TOP_LOCATION);
+        thumbnailLeft = bundle.getInt(LEFT_LOCATION);
+        thumbnailWidth = bundle.getInt(THUMBNAIL_WIDTH);
+        thumbnailHeight = bundle.getInt(THUMBNAIL_HEIGHT);
+        mCurrentPosition = bundle.getInt(CLICK_INDEX);
+        mNineImageUrls = (ArrayList<NineImageUrl>) bundle.getSerializable(THUMBNAIL_IMAGE_URLS);
+        mScale = bundle.getFloat(THUMBNAIL_RATIO);
+        mImageUrl = mNineImageUrls.get(mCurrentPosition).getNineImageUrl();
     }
 
     @Override
@@ -117,7 +145,6 @@ public class ImageDetailActivity extends Activity{
                     ImageLoadUtil.loadWithFresco(img_head, mImageUrl);
 
 
-
                     float measureWidth = img_head.getMeasuredWidth();
                     float measureHeight = img_head.getMeasuredHeight();
                     // Figure out where the thumbnail and full size versions are, relative
@@ -139,20 +166,19 @@ public class ImageDetailActivity extends Activity{
                     );
 
                     // Scale factors to make the large version the same size as the thumbnail
-                    mWidthScale = (float) thumbnailWidth / (float)measureWidth;
-                    mHeightScale = (float) thumbnailHeight / (float)measureHeight;
+                    mWidthScale = (float) thumbnailWidth / (float) measureWidth;
+                    mHeightScale = (float) thumbnailHeight / (float) measureHeight;
 
 
                     AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
                     ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
-                    ValueAnimator animator2 =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
+                    ValueAnimator animator2 = ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
                     ValueAnimator translateX = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);
                     ValueAnimator translateY = ObjectAnimator.ofFloat(img_head, "translationY", 0, mTopDelta);
                     AnimatorSet translateSet = new AnimatorSet();
                     translateSet.playTogether(translateX, translateY, animator2);
                     translateSet.setDuration(0).start();
-
 
 
                     enterValueAnimation();
@@ -163,7 +189,6 @@ public class ImageDetailActivity extends Activity{
 
         }
     }
-
 
 
     private void initView() {
@@ -193,9 +218,27 @@ public class ImageDetailActivity extends Activity{
         view_pager = (ViewPager) findViewById(R.id.view_pager);
         view_pager.setVisibility(View.GONE);
         FrescoPhotoPageAdapter photoPageAdapter = new
-                FrescoPhotoPageAdapter(Arrays.asList(Photo.images));
+                FrescoPhotoPageAdapter(mNineImageUrls);
         view_pager.setAdapter(photoPageAdapter);
         view_pager.setCurrentItem(mCurrentPosition);
+
+        view_pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentPosition = position;
+                ImageLoadUtil.loadWithFresco(img_head, Photo.images[mCurrentPosition]);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     public void enterValueAnimation() {
@@ -213,7 +256,7 @@ public class ImageDetailActivity extends Activity{
 //        translateSet.playTogether(translateX, translateY, animator2);
 //        translateSet.setDuration(0).start();
 
-        ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", screenWidth);
+        ValueAnimator animator = ObjectAnimator.ofInt(viewWrapper, "width", screenWidth);
         ValueAnimator scaleAnimator =
                 ObjectAnimator.ofFloat(viewWrapper, "simpleScale", 1, mScale);
         ValueAnimator translateXAnim = ObjectAnimator.ofFloat(img_head, "translationX", mLeftDelta, 0);
@@ -309,7 +352,7 @@ public class ImageDetailActivity extends Activity{
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(img_head);
 
-        ValueAnimator animator =ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
+        ValueAnimator animator = ObjectAnimator.ofInt(viewWrapper, "width", thumbnailWidth);
         ValueAnimator scaleAnimator =
                 ObjectAnimator.ofFloat(viewWrapper, "simpleScale", mScale, 1);
         ValueAnimator translateXAnim = ObjectAnimator.ofFloat(img_head, "translationX", 0, mLeftDelta);

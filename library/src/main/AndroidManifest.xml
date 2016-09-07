@@ -8,7 +8,7 @@
         >
 
         <activity android:name=".ui.activity.ImageDetailActivity"
-                  android:theme="@style/Transparent"
+                  android:theme="@style/Theme.notAnimation"
             ></activity>
 
     </application>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alious.pro.photo.library.R;
+import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -23,9 +24,9 @@ import java.util.List;
  */
 public class FrescoPhotoPageAdapter extends PagerAdapter{
 
-    private List<String> mPreviewImages;
+    private List<NineImageUrl> mPreviewImages;
 
-    public FrescoPhotoPageAdapter(List<String> previewImages) {
+    public FrescoPhotoPageAdapter(List<NineImageUrl> previewImages) {
         this.mPreviewImages = previewImages;
     }
 
@@ -62,7 +63,7 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
             public void onFailure(String id, Throwable throwable) {
             }
         };
-        Uri uri = Uri.parse(mPreviewImages.get(position));
+        Uri uri = Uri.parse(mPreviewImages.get(position).getNineImageUrl());
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(controllerListener)
                 .setUri(uri)

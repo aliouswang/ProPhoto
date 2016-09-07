@@ -35,7 +35,7 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
 
     private ArrayList<Point> mPoints;
 
-    private NineGridDataSource mGridAdapter;
+    protected NineGridDataSource mGridAdapter;
     private NineGridDelegate mGridDelegate;
 
     public NineGridViewGroup(Context context) {
@@ -92,11 +92,14 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
 
                 @Override
                 public void onClick(View view) {
-                    mGridDelegate.onItemClicked(view, mGridAdapter.getItem(index), index);
+//                    mGridDelegate.onItemClicked(view, mGridAdapter.getItem(index), index);
+                    onItemClicked(view, index);
                 }
             });
         }
     }
+
+    protected abstract void onItemClicked(View view, int index);
 
     private void calculateCellPoint() {
         int count = getCount();
@@ -130,7 +133,8 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     }
 
     public int getCount() {
-        return mGridAdapter != null ? mGridAdapter.getCount() : 0;
+        return mGridAdapter != null ?
+                Math.min(mGridAdapter.getCount(), mMaxSize) : 0;
     }
 
     public String getUrlByPosition(int pos) {
@@ -162,7 +166,6 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     protected void onLayout(boolean b, int l, int i1, int i2, int i3) {
         int count = getCount();
         if (count <= 0 || getChildCount() < count) return;
-//        reuseChildrenView();
         for (int i = 0; i < count; i++) {
             View childView = getChildAt(i);
             float left = getPointByPosition(i).column * (mCellWidth + mHorizontalGap) + getPaddingLeft();
@@ -174,11 +177,6 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     protected abstract T generateChildView(int pos);
 
     protected abstract void loadImage(T t, String imageUrl);
-//    {
-//        ScaleSimpleDraweeView simpleDraweeView = new ScaleSimpleDraweeView(getContext());
-//        ImageLoadUtil.loadScaleWithFresco(simpleDraweeView, getUrlByPosition(pos));
-//        return simpleDraweeView;
-//    }
 
     private class Point {
         int row;
