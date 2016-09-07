@@ -22,12 +22,12 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
-import com.alious.pro.photo.library.Photo;
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
-import com.alious.pro.photo.library.utils.ImageLoadUtil;
-import com.alious.pro.photo.library.widget.ScaleSimpleDraweeView;
+import com.alious.pro.photo.library.widget.RatioImageView;
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,9 @@ import java.util.ArrayList;
  */
 public class ImageDetailActivity extends Activity {
 
-    private ScaleSimpleDraweeView img_head;
+//    private ScaleSimpleDraweeView img_head;
+    private RatioImageView img_head;
+
     private View main_background;
 
     private ColorDrawable mColorDrawable;
@@ -142,8 +144,9 @@ public class ImageDetailActivity extends Activity {
                     img_head.getViewTreeObserver().removeOnPreDrawListener(this);
 
 
-                    ImageLoadUtil.loadWithFresco(img_head, mImageUrl);
-
+//                    ImageLoadUtil.loadWithFresco(img_head, mImageUrl);
+//                    Glide.with(ImageDetailActivity.this).load(mImageUrl).into(img_head);
+                    Picasso.with(ImageDetailActivity.this).load(mImageUrl).into(img_head);
 
                     float measureWidth = img_head.getMeasuredWidth();
                     float measureHeight = img_head.getMeasuredHeight();
@@ -193,7 +196,7 @@ public class ImageDetailActivity extends Activity {
 
     private void initView() {
         main_background = findViewById(R.id.main_background);
-        img_head = (ScaleSimpleDraweeView) findViewById(R.id.img_head);
+        img_head = (RatioImageView) findViewById(R.id.img_head);
 //        img_head.setScale(mScale);
         mColorDrawable = new ColorDrawable(Color.BLACK);
         main_background.setBackgroundDrawable(mColorDrawable);
@@ -231,7 +234,9 @@ public class ImageDetailActivity extends Activity {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
-                ImageLoadUtil.loadWithFresco(img_head, Photo.images[mCurrentPosition]);
+//                ImageLoadUtil.loadWithFresco(img_head, Photo.images[mCurrentPosition]);
+                Glide.with(ImageDetailActivity.this)
+                        .load(mNineImageUrls.get(mCurrentPosition)).into(img_head);
             }
 
             @Override
@@ -316,7 +321,8 @@ public class ImageDetailActivity extends Activity {
 
         public void setSimpleScale(float scale) {
             this.mScale = scale;
-            ((ScaleSimpleDraweeView) mTarget).setScale(scale);
+//            ((ScaleSimpleDraweeView) mTarget).setScale(scale);
+            ((RatioImageView) mTarget).setRatio(scale);
         }
 
     }

@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
@@ -14,7 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
  */
 public class RatioImageView extends ImageView{
 
-    private float ratio = 1.0f;
+    private float ratio = -1.0f;
 
     public RatioImageView(Context context) {
         super(context);
@@ -34,17 +35,29 @@ public class RatioImageView extends ImageView{
 
     public void setRatio(float ratio) {
         this.ratio = ratio;
+        requestLayout();
+        invalidate();
     }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         if (drawable instanceof BitmapDrawable) {
-            this.ratio = (float)drawable.getIntrinsicWidth() / (float)drawable.getIntrinsicHeight();
+            this.ratio = (float)drawable.getIntrinsicHeight() / (float)drawable.getIntrinsicWidth();
             Log.e("prophoto", this.ratio + "");
         }else if (drawable instanceof GlideBitmapDrawable) {
-            this.ratio = (float)drawable.getIntrinsicWidth()/ (float)drawable.getIntrinsicHeight();
+            this.ratio = (float)drawable.getIntrinsicHeight()/ (float)drawable.getIntrinsicWidth();
             Log.e("prophoto", this.ratio + "");
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        float width = View.MeasureSpec.getSize(widthMeasureSpec);
+        float height = View.MeasureSpec.getSize(heightMeasureSpec);
+        if (ratio > 0) {
+            height = width * ratio;
+        }
+        setMeasuredDimension((int)width, (int)height);
     }
 }

@@ -5,9 +5,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.alious.pro.photo.library.widget.ScaleSimpleDraweeView
+    <!--<com.alious.pro.photo.library.widget.ScaleSimpleDraweeView-->
+        <!--android:id="@+id/img_head"-->
+        <!--fresco:actualImageScaleType="centerCrop"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp"/>-->
+
+    <com.alious.pro.photo.library.widget.RatioImageView
         android:id="@+id/img_head"
         fresco:actualImageScaleType="centerCrop"
+        android:scaleType="centerCrop"
         android:layout_gravity="center"
         android:layout_centerInParent="true"
         android:layout_width="100dp"

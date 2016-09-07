@@ -7,10 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.alious.pro.simple.MainActivity">
 
-    <com.alious.pro.photo.library.widget.ScaleSimpleDraweeView
+    <com.alious.pro.photo.library.widget.RatioImageView
         android:id="@+id/img_head"
         fresco:actualImageScaleType="centerCrop"
         android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
         android:layout_width="100dp"
         android:layout_height="100dp"/>
 
@@ -20,6 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -30,7 +33,16 @@
 
     <com.alious.pro.photo.library.widget.NineGlideGridViewGroup
         android:id="@+id/nine_grid"
-        android:layout_width="300dp"
+        android:layout_width="200dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"/>
+
+    <com.alious.pro.photo.library.widget.NineFrescoGridViewGroup
+        android:id="@+id/nine_grid2"
+        android:visibility="visible"
+        android:layout_below="@+id/nine_grid"
+        android:layout_marginTop="30dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"/>
 
 </RelativeLayout>

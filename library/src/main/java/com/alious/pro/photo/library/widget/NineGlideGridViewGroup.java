@@ -3,9 +3,10 @@ package com.alious.pro.photo.library.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.alious.pro.photo.library.ui.activity.ImageDetailActivity;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by aliouswang on 16/9/7.
@@ -33,11 +34,14 @@ public class NineGlideGridViewGroup extends NineGridViewGroup<RatioImageView>{
 
     @Override
     protected RatioImageView generateChildView(int pos) {
-        return new RatioImageView(getContext());
+        RatioImageView ratioImageView = new RatioImageView(getContext());
+        ratioImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        return ratioImageView;
     }
 
     @Override
     protected void loadImage(RatioImageView imageView, String imageUrl) {
-        Glide.with(getContext()).load(imageUrl).into(imageView);
+//        Glide.with(getContext()).load(imageUrl).into(imageView);
+        Picasso.with(getContext()).load(imageUrl).into(imageView);
     }
 }
