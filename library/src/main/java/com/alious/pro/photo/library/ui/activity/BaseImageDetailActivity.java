@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -71,21 +70,6 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     private ViewPager mViewPager;
 
     private ArrayList<NineImageUrl> mNineImageUrls;
-
-    public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
-                                   float ratio) {
-        int[] screenLocation = new int[2];
-        view.getLocationOnScreen(screenLocation);
-        Intent intent = new Intent(context, BaseImageDetailActivity.class);
-        intent.putExtra(LEFT_LOCATION, screenLocation[0]).
-                putExtra(TOP_LOCATION, screenLocation[1]).
-                putExtra(THUMBNAIL_WIDTH, view.getWidth()).
-                putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
-                putExtra(CLICK_INDEX, index).
-                putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
-                putExtra(THUMBNAIL_RATIO, ratio);
-        return intent;
-    }
 
     private void parseIntent(Intent intent) {
         Bundle bundle = intent.getExtras();

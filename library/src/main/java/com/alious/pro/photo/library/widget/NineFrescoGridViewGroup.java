@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.alious.pro.photo.library.ui.activity.BaseImageDetailActivity;
+import com.alious.pro.photo.library.ui.activity.FrescoImageDetailActivity;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 
 /**
@@ -26,7 +26,7 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<RatioSimpleDrawee
 
     @Override
     protected void onItemClicked(View view, int index) {
-        getContext().startActivity(BaseImageDetailActivity.newIntent(getContext(),
+        getContext().startActivity(FrescoImageDetailActivity.newIntent(getContext(),
                 view, index, mGridAdapter.getItemList(),
                 ((RatioSimpleDraweeView)view).getRatio()));
     }

@@ -1,8 +1,15 @@
 package com.alious.pro.photo.library.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.View;
+
 import com.alious.pro.photo.library.R;
+import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 import com.alious.pro.photo.library.widget.RatioSimpleDraweeView;
+
+import java.util.ArrayList;
 
 /**
  * Fresco image detail activity
@@ -12,16 +19,31 @@ import com.alious.pro.photo.library.widget.RatioSimpleDraweeView;
 public class FrescoImageDetailActivity
         extends BaseImageDetailActivity<RatioSimpleDraweeView>{
 
-    protected RatioSimpleDraweeView mMaskImageView;
+//    protected RatioSimpleDraweeView mMaskImageView;
+
+    public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
+                                   float ratio) {
+        int[] screenLocation = new int[2];
+        view.getLocationOnScreen(screenLocation);
+        Intent intent = new Intent(context, FrescoImageDetailActivity.class);
+        intent.putExtra(LEFT_LOCATION, screenLocation[0]).
+                putExtra(TOP_LOCATION, screenLocation[1]).
+                putExtra(THUMBNAIL_WIDTH, view.getWidth()).
+                putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
+                putExtra(CLICK_INDEX, index).
+                putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
+                putExtra(THUMBNAIL_RATIO, ratio);
+        return intent;
+    }
 
     @Override
     protected int getInflateLayout() {
-        return R.layout.activity_img_detail;
+        return R.layout.activity_fresco_image_detail;
     }
 
     @Override
     protected void initMaskImageView() {
-        mMaskImageView = (RatioSimpleDraweeView) findViewById(R.id.img_head);
+        mMaskImageView = (RatioSimpleDraweeView) findViewById(R.id.img_mask);
     }
 
     @Override

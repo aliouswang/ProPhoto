@@ -52,7 +52,7 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
                     return;
                 }
                 float mScale = (float) imageInfo.getHeight() / (float) imageInfo.getWidth();
-                img_head.setScale(mScale);
+                img_head.setRatio(mScale);
             }
 
             @Override
