@@ -108,6 +108,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
         }
     }
 
+    private int[] mInitScreenLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +146,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
                     loadImage(mMaskImageView, mCurrentImageUrl);
 
                     int[] screenLocation = new int[2];
+                    mInitScreenLocation = screenLocation;
                     mMaskImageView.getLocationOnScreen(screenLocation);
                     mLeftDelta = mThumbnailLeft - screenLocation[0];
                     mTopDelta = mThumbnailTop - screenLocation[1];
@@ -238,6 +240,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 mViewPager.setVisibility(View.VISIBLE);
+                mMaskImageView.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -284,18 +287,17 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     public void exitAnimation(final Runnable endAction) {
 
         mRatio = ((IRatio)mMaskImageView).getRatio();
-        int[] screenLocation = new int[2];
-        mMaskImageView.getLocationOnScreen(screenLocation);
-        mLeftDelta = mNineImageDeltas.get(mCurrentPosition).left - screenLocation[0];
-        mTopDelta = mNineImageDeltas.get(mCurrentPosition).top - screenLocation[1];
+        mLeftDelta = mNineImageDeltas.get(mCurrentPosition).left - mInitScreenLocation[0];
+        mTopDelta = mNineImageDeltas.get(mCurrentPosition).top - mInitScreenLocation[1];
 
+        mMaskImageView.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.GONE);
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(mMaskImageView);
 
         ValueAnimator animator = ObjectAnimator.ofInt(viewWrapper, "width", mThumbnailWidth);
         ValueAnimator scaleAnimator =
-                ObjectAnimator.ofFloat(viewWrapper, "simpleScale", mRatio, 1);
+                ObjectAnimator.ofFloat(viewWrapper, "ratio", mRatio, 1);
         ValueAnimator translateXAnim = ObjectAnimator.ofFloat(mMaskImageView, "translationX", 0, mLeftDelta);
         ValueAnimator translateYAnim = ObjectAnimator.ofFloat(mMaskImageView, "translationY", 0, mTopDelta);
 
