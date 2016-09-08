@@ -18,13 +18,14 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.IRatio;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.model.Point;
+import com.alious.pro.photo.library.widget.PageIndicatorView;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
     private View mMainBackground;
     private ColorDrawable mColorDrawable;
+    private PageIndicatorView mPageIndicatorView;
 
     private int mLeftDelta;
     private int mTopDelta;
@@ -177,9 +179,12 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
         mColorDrawable = new ColorDrawable(Color.BLACK);
         mMainBackground.setBackgroundDrawable(mColorDrawable);
 
+        mPageIndicatorView = (PageIndicatorView) findViewById(R.id.page_indicator);
+        mPageIndicatorView.setCircle(mNineImageUrls.size(), mCurrentPosition);
+
         initMaskImageView();
 
-        FrameLayout.LayoutParams flp = (FrameLayout.LayoutParams) mMaskImageView.getLayoutParams();
+        RelativeLayout.LayoutParams flp = (RelativeLayout.LayoutParams) mMaskImageView.getLayoutParams();
         flp.width = mThumbnailWidth;
         flp.height = mThumbnailHeight;
         mMaskImageView.setLayoutParams(flp);
@@ -201,6 +206,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
                 loadImage(mMaskImageView, mNineImageUrls.get(mCurrentPosition).getNineImageUrl());
+                mPageIndicatorView.notifyFocusChanged(position);
             }
 
             @Override

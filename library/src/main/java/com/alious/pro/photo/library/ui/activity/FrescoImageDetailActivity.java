@@ -20,8 +20,6 @@ import java.util.ArrayList;
 public class FrescoImageDetailActivity
         extends BaseImageDetailActivity<RatioSimpleDraweeView>{
 
-//    protected RatioSimpleDraweeView mMaskImageView;
-
     public static Intent newIntent(Context context,
                                    View view,
                                    int index,
