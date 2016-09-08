@@ -79,6 +79,9 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     private ArrayList<NineImageUrl> mNineImageUrls;
     private ArrayList<ImageDelta> mNineImageDeltas;
 
+    private volatile boolean bEnterAnimGoing;
+    private volatile boolean bExitAnimGoing;
+
     private void parseIntent(Intent intent) {
         Bundle bundle = intent.getExtras();
         mThumbnailTop = bundle.getInt(TOP_LOCATION);
@@ -221,7 +224,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     protected abstract void loadImage(T view, String imageUrl);
 
     public void enterValueAnimation() {
-
+        if (bEnterAnimGoing) return;
+        bEnterAnimGoing = true;
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(mMaskImageView);
 
@@ -247,6 +251,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             public void onAnimationEnd(Animator animator) {
                 mViewPager.setVisibility(View.VISIBLE);
                 mMaskImageView.setVisibility(View.INVISIBLE);
+                bEnterAnimGoing = false;
             }
 
             @Override
@@ -291,11 +296,14 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     }
 
     public void exitAnimation(final Runnable endAction) {
+        if (bExitAnimGoing) return;
+        bExitAnimGoing = true;
 
         mRatio = ((IRatio)mMaskImageView).getRatio();
         mLeftDelta = mNineImageDeltas.get(mCurrentPosition).left - mInitScreenLocation[0];
         mTopDelta = mNineImageDeltas.get(mCurrentPosition).top - mInitScreenLocation[1];
 
+        mPageIndicatorView.setVisibility(View.GONE);
         mMaskImageView.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.GONE);
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
@@ -321,6 +329,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 endAction.run();
+                bExitAnimGoing = false;
             }
 
             @Override
