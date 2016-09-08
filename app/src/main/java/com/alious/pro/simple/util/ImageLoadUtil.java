@@ -1,4 +1,4 @@
-package com.alious.pro.simple;
+package com.alious.pro.simple.util;
 
 import android.net.Uri;
 

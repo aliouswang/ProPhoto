@@ -5,7 +5,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alious.pro.simple.MainActivity">
+    tools:context=".activity.MainActivity">
 
     <com.alious.pro.photo.library.widget.RatioImageView
         android:id="@+id/img_head"
@@ -17,18 +17,23 @@
         android:layout_height="100dp"/>
 
     <Button
-        android:id="@+id/btn_start"
-        android:text="start animation"
+        android:id="@+id/btn_goto_fresco"
+        android:text="goto fresco "
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!--<com.alious.pro.photo.library.widget.NineFrescoGridViewGroup-->
-        <!--android:id="@+id/nine_grid"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"/>-->
+    <Button
+        android:id="@+id/btn_goto_picasso"
+        android:text="goto picasso"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <com.alious.pro.photo.library.widget.NinePicassoGridViewGroup
         android:id="@+id/nine_grid"

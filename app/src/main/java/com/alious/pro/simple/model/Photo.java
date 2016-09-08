@@ -1,4 +1,4 @@
-package com.alious.pro.simple;
+package com.alious.pro.simple.model;
 
 /**
  * Created by aliouswang on 16/9/2.

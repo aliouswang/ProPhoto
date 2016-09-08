@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:text="Write anything you want"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.alious.pro.photo.library.widget.NinePicassoGridViewGroup
+        android:id="@+id/nine_picasso_gridview"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

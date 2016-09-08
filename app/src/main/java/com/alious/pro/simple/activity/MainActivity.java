@@ -1,4 +1,4 @@
-package com.alious.pro.simple;
+package com.alious.pro.simple.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import com.alious.pro.photo.library.adapter.DefaultNineImageAdapter;
 import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
 import com.alious.pro.photo.library.widget.NinePicassoGridViewGroup;
 import com.alious.pro.photo.library.widget.RatioImageView;
+import com.alious.pro.simple.R;
+import com.alious.pro.simple.model.Data;
+import com.alious.pro.simple.model.Photo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private NinePicassoGridViewGroup nine_grid;
     private NineFrescoGridViewGroup nine_grid2;
 
-    private Button btn_start;
+    private Button btn_goto_fresco;
+    private Button btn_goto_picasso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +65,22 @@ public class MainActivity extends AppCompatActivity {
         nine_grid2 = (NineFrescoGridViewGroup) findViewById(R.id.nine_grid2);
         nine_grid2.setGridAdapter(defaultNineImageAdapter2);
 
-        btn_start = (Button) findViewById(R.id.btn_start);
-        btn_start.setOnClickListener(new View.OnClickListener(){
+        btn_goto_fresco = (Button) findViewById(R.id.btn_goto_fresco);
+        btn_goto_fresco.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, FrescoRecyclerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_goto_picasso = (Button) findViewById(R.id.btn_goto_picasso);
+        btn_goto_picasso.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PicassoRecyclerActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,4 +1,4 @@
-package com.alious.pro.simple;
+package com.alious.pro.simple.model;
 
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 
