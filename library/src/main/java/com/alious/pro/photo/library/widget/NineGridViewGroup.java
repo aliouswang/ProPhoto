@@ -26,8 +26,8 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     private int mMaxSize;
     private int mRowCount;
     private int mColumnCount;
-    private int mHorizontalGap;
-    private int mVerticalGap;
+    protected int mHorizontalGap;
+    protected int mVerticalGap;
     private float mRatio;
 
     private float mCellWidth;

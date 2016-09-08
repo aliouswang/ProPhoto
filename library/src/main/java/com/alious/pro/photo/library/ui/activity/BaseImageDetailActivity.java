@@ -44,6 +44,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     public static final String CLICK_INDEX = "click_index";
     public static final String THUMBNAIL_IMAGE_URLS = "thumbnail_image_urls";
     public static final String THUMBNAIL_RATIO = "thumbnail_ratio";
+    public static final String HORIZONTAL_GAP = "horizontal_gap";
+    public static final String VERTICAL_GAP = "vertical_gap";
 
     protected T mMaskImageView;
 
@@ -52,9 +54,9 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
     private int mLeftDelta;
     private int mTopDelta;
-    private float mWidthScale;
-    private float mHeightScale;
     private float mRatio;
+    private int mHorizontalGap;
+    private int mVerticalGap;
 
     private int mThumbnailTop;
     private int mThumbnailLeft;
@@ -80,6 +82,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
         mCurrentPosition = bundle.getInt(CLICK_INDEX);
         mNineImageUrls = (ArrayList<NineImageUrl>) bundle.getSerializable(THUMBNAIL_IMAGE_URLS);
         mRatio = bundle.getFloat(THUMBNAIL_RATIO);
+        mHorizontalGap = bundle.getInt(HORIZONTAL_GAP);
+        mVerticalGap = bundle.getInt(VERTICAL_GAP);
         mCurrentImageUrl = mNineImageUrls.get(mCurrentPosition).getNineImageUrl();
     }
 
@@ -98,7 +102,6 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorBlack));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //4.4 全透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
@@ -111,8 +114,6 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
         initView();
 
-        // Only run the animation if we're coming from the parent activity, not if
-        // we're recreated automatically by the window manager (e.g., device rotation)
         if (savedInstanceState == null) {
             ViewTreeObserver observer = mMaskImageView.getViewTreeObserver();
             observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -120,23 +121,12 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
                 @Override
                 public boolean onPreDraw() {
                     mMaskImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-//                    ImageLoadUtil.loadWithFresco(img_head, mImageUrl);
-//                    Glide.with(ImageDetailActivity.this).load(mImageUrl).into(img_head);
-//                    Picasso.with(BaseImageDetailActivity.this)
-//                            .load(mCurrentImageUrl).into(mMaskImageView);
                     loadImage(mMaskImageView, mCurrentImageUrl);
 
-                    float measureWidth = mMaskImageView.getMeasuredWidth();
-                    float measureHeight = mMaskImageView.getMeasuredHeight();
                     int[] screenLocation = new int[2];
                     mMaskImageView.getLocationOnScreen(screenLocation);
                     mLeftDelta = mThumbnailLeft - screenLocation[0];
                     mTopDelta = mThumbnailTop - screenLocation[1];
-
-                    // Scale factors to make the large version the same size as the thumbnail
-                    mWidthScale = (float) mThumbnailWidth / measureWidth;
-                    mHeightScale = (float) mThumbnailHeight / measureHeight;
 
                     AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
                     ViewWrapper viewWrapper = new ViewWrapper(mMaskImageView);
@@ -185,9 +175,6 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
-//                ImageLoadUtil.loadWithFresco(img_head, Photo.images[mCurrentPosition]);
-//                Glide.with(BaseImageDetailActivity.this)
-//                        .load(mNineImageUrls.get(mCurrentPosition)).into(img_head);
                 loadImage(mMaskImageView, mNineImageUrls.get(mCurrentPosition).getNineImageUrl());
             }
 

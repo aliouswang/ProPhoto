@@ -21,7 +21,7 @@ public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioIma
 //    protected RatioImageView mMaskImageView;
 
     public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
-                                   float ratio) {
+                                   float ratio, int verticalGap, int HorizontalGap) {
         int[] screenLocation = new int[2];
         view.getLocationOnScreen(screenLocation);
         Intent intent = new Intent(context, PicassoImageDetailActivity.class);
@@ -31,7 +31,9 @@ public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioIma
                 putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
                 putExtra(CLICK_INDEX, index).
                 putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
-                putExtra(THUMBNAIL_RATIO, ratio);
+                putExtra(THUMBNAIL_RATIO, ratio).
+                putExtra(VERTICAL_GAP, verticalGap).
+                putExtra(HORIZONTAL_GAP, HorizontalGap);
         return intent;
     }
 

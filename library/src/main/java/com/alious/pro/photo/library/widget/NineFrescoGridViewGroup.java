@@ -26,9 +26,15 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<RatioSimpleDrawee
 
     @Override
     protected void onItemClicked(View view, int index) {
-        getContext().startActivity(FrescoImageDetailActivity.newIntent(getContext(),
-                view, index, mGridAdapter.getItemList(),
-                ((RatioSimpleDraweeView)view).getRatio()));
+        getContext().startActivity(FrescoImageDetailActivity.newIntent(
+                getContext(),
+                view,
+                index,
+                mGridAdapter.getItemList(),
+                ((RatioSimpleDraweeView)view).getRatio(),
+                mVerticalGap,
+                mHorizontalGap)
+                );
     }
 
     @Override

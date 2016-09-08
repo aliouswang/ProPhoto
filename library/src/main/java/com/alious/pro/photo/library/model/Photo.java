@@ -1,4 +1,4 @@
-package com.alious.pro.photo.library;
+package com.alious.pro.photo.library.model;
 
 /**
  * Created by aliouswang on 16/9/2.

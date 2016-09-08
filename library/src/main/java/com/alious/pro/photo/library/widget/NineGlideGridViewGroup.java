@@ -27,9 +27,14 @@ public class NineGlideGridViewGroup extends NineGridViewGroup<RatioImageView>{
 
     @Override
     protected void onItemClicked(View view, int index) {
-        getContext().startActivity(PicassoImageDetailActivity.newIntent(getContext(),
-                view, index, mGridAdapter.getItemList(),
-                ((RatioImageView)view).getRatio()));
+        getContext().startActivity(PicassoImageDetailActivity.newIntent(
+                getContext(),
+                view,
+                index,
+                mGridAdapter.getItemList(),
+                ((RatioImageView)view).getRatio(),
+                mVerticalGap,
+                mHorizontalGap));
     }
 
     @Override
