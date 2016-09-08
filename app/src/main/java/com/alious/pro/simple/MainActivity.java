@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.alious.pro.photo.library.adapter.DefaultNineImageAdapter;
 import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
-import com.alious.pro.photo.library.widget.NineGlideGridViewGroup;
+import com.alious.pro.photo.library.widget.NinePicassoGridViewGroup;
 import com.alious.pro.photo.library.widget.RatioImageView;
 import com.squareup.picasso.Picasso;
 
@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RatioImageView img_head;
 
-    private NineGlideGridViewGroup nine_grid;
+    private NinePicassoGridViewGroup nine_grid;
     private NineFrescoGridViewGroup nine_grid2;
 
     @Override
@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         img_head = (RatioImageView) findViewById(R.id.img_head);
-
 
         Picasso.with(MainActivity.this)
                 .load(Photo.images[7])
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         DefaultNineImageAdapter<Data> defaultNineImageAdapter =
                 new DefaultNineImageAdapter(datas);
-        nine_grid = (NineGlideGridViewGroup) findViewById(R.id.nine_grid);
+        nine_grid = (NinePicassoGridViewGroup) findViewById(R.id.nine_grid);
         nine_grid.setGridAdapter(defaultNineImageAdapter);
 
         DefaultNineImageAdapter<Data> defaultNineImageAdapter2 =

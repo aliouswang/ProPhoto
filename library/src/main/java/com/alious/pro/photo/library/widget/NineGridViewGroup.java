@@ -108,8 +108,8 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
             mPoints = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 Point point = new Point();
-                point.row = i % mColumnCount;
-                point.column = i / mColumnCount;
+                point.column = i % mColumnCount;
+                point.row = i / mColumnCount;
                 mPoints.add(point);
             }
             mRowCount = (int) Math.ceil(count / mColumnCount);

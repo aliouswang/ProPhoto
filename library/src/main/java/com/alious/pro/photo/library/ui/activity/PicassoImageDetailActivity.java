@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
+import com.alious.pro.photo.library.model.Point;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 import com.alious.pro.photo.library.widget.RatioImageView;
 
@@ -13,14 +14,15 @@ import java.util.ArrayList;
 
 /**
  * Picasso image detail activity.
- *
+ * <p/>
  * Created by aliouswang on 16/9/7.
  */
-public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioImageView>{
+public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioImageView> {
 
 //    protected RatioImageView mMaskImageView;
 
     public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
+                                   ArrayList<Point> points,
                                    float ratio, int verticalGap, int HorizontalGap) {
         int[] screenLocation = new int[2];
         view.getLocationOnScreen(screenLocation);
@@ -31,6 +33,7 @@ public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioIma
                 putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
                 putExtra(CLICK_INDEX, index).
                 putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
+                putExtra(THUMBNAIL_IMAGE_POINTS, points).
                 putExtra(THUMBNAIL_RATIO, ratio).
                 putExtra(VERTICAL_GAP, verticalGap).
                 putExtra(HORIZONTAL_GAP, HorizontalGap);

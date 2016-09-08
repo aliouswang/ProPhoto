@@ -11,17 +11,17 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by aliouswang on 16/9/7.
  */
-public class NineGlideGridViewGroup extends NineGridViewGroup<RatioImageView>{
+public class NinePicassoGridViewGroup extends NineGridViewGroup<RatioImageView>{
 
-    public NineGlideGridViewGroup(Context context) {
+    public NinePicassoGridViewGroup(Context context) {
         super(context);
     }
 
-    public NineGlideGridViewGroup(Context context, AttributeSet attrs) {
+    public NinePicassoGridViewGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public NineGlideGridViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
+    public NinePicassoGridViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -32,6 +32,7 @@ public class NineGlideGridViewGroup extends NineGridViewGroup<RatioImageView>{
                 view,
                 index,
                 mGridAdapter.getItemList(),
+                mPoints,
                 ((RatioImageView)view).getRatio(),
                 mVerticalGap,
                 mHorizontalGap));

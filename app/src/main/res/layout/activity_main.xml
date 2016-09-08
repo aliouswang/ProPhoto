@@ -31,7 +31,7 @@
         <!--android:layout_width="300dp"-->
         <!--android:layout_height="wrap_content"/>-->
 
-    <com.alious.pro.photo.library.widget.NineGlideGridViewGroup
+    <com.alious.pro.photo.library.widget.NinePicassoGridViewGroup
         android:id="@+id/nine_grid"
         android:layout_width="200dp"
         android:visibility="visible"
