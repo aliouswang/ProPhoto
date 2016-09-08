@@ -31,6 +31,7 @@ public class NineFrescoGridViewGroup extends NineGridViewGroup<RatioSimpleDrawee
                 view,
                 index,
                 mGridAdapter.getItemList(),
+                mPoints,
                 ((RatioSimpleDraweeView)view).getRatio(),
                 mVerticalGap,
                 mHorizontalGap)

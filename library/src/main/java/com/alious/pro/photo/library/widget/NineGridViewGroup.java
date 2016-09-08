@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineGridDataSource;
 import com.alious.pro.photo.library.interfaces.NineGridDelegate;
+import com.alious.pro.photo.library.model.Point;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
     private float mCellWidth;
     private float mCellHeight;
 
-    private ArrayList<Point> mPoints;
+    protected ArrayList<Point> mPoints;
 
     protected NineGridDataSource mGridAdapter;
     private NineGridDelegate mGridDelegate;
@@ -178,8 +179,5 @@ public abstract class NineGridViewGroup<T extends View> extends ViewGroup{
 
     protected abstract void loadImage(T t, String imageUrl);
 
-    private class Point {
-        int row;
-        int column;
-    }
+
 }

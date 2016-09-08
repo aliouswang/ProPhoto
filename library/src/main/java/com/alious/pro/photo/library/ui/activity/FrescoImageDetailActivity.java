@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
+import com.alious.pro.photo.library.model.Point;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
 import com.alious.pro.photo.library.widget.RatioSimpleDraweeView;
 
@@ -21,8 +22,14 @@ public class FrescoImageDetailActivity
 
 //    protected RatioSimpleDraweeView mMaskImageView;
 
-    public static Intent newIntent(Context context, View view, int index, ArrayList<NineImageUrl> imageUrls,
-                                   float ratio, int verticalGap, int horizontalGap) {
+    public static Intent newIntent(Context context,
+                                   View view,
+                                   int index,
+                                   ArrayList<NineImageUrl> imageUrls,
+                                   ArrayList<Point> points,
+                                   float ratio,
+                                   int verticalGap,
+                                   int horizontalGap) {
         int[] screenLocation = new int[2];
         view.getLocationOnScreen(screenLocation);
         Intent intent = new Intent(context, FrescoImageDetailActivity.class);
@@ -32,6 +39,7 @@ public class FrescoImageDetailActivity
                 putExtra(THUMBNAIL_HEIGHT, view.getHeight()).
                 putExtra(CLICK_INDEX, index).
                 putExtra(THUMBNAIL_IMAGE_URLS, imageUrls).
+                putExtra(THUMBNAIL_IMAGE_POINTS, points).
                 putExtra(THUMBNAIL_RATIO, ratio).
                 putExtra(VERTICAL_GAP, verticalGap).
                 putExtra(HORIZONTAL_GAP, horizontalGap)

@@ -24,6 +24,7 @@ import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.IRatio;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
+import com.alious.pro.photo.library.model.Point;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     public static final String THUMBNAIL_WIDTH = "thumbnail_width";
     public static final String THUMBNAIL_HEIGHT = "thumbnail_height";
     public static final String CLICK_INDEX = "click_index";
+    public static final String THUMBNAIL_IMAGE_POINTS = "thumbnail_image_points";
     public static final String THUMBNAIL_IMAGE_URLS = "thumbnail_image_urls";
     public static final String THUMBNAIL_RATIO = "thumbnail_ratio";
     public static final String HORIZONTAL_GAP = "horizontal_gap";
@@ -71,7 +73,9 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
     private ViewPager mViewPager;
 
+    private ArrayList<Point> mNineImagePoints;
     private ArrayList<NineImageUrl> mNineImageUrls;
+    private ArrayList<ImageDelta> mNineImageDeltas;
 
     private void parseIntent(Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -81,10 +85,27 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
         mThumbnailHeight = bundle.getInt(THUMBNAIL_HEIGHT);
         mCurrentPosition = bundle.getInt(CLICK_INDEX);
         mNineImageUrls = (ArrayList<NineImageUrl>) bundle.getSerializable(THUMBNAIL_IMAGE_URLS);
+        mNineImagePoints = (ArrayList<Point>) bundle.getSerializable(THUMBNAIL_IMAGE_POINTS);
         mRatio = bundle.getFloat(THUMBNAIL_RATIO);
         mHorizontalGap = bundle.getInt(HORIZONTAL_GAP);
         mVerticalGap = bundle.getInt(VERTICAL_GAP);
         mCurrentImageUrl = mNineImageUrls.get(mCurrentPosition).getNineImageUrl();
+    }
+
+    private void calculateImageDeltas() {
+        mNineImageDeltas = new ArrayList<>();
+        if (mNineImageUrls == null || mNineImageUrls.isEmpty()) return;
+        int size = mNineImageUrls.size();
+        for (int i = 0; i < size; i++) {
+            Point point = mNineImagePoints.get(i);
+            Point curPoint = mNineImagePoints.get(mCurrentPosition);
+            ImageDelta imageDelta = new ImageDelta();
+            imageDelta.left = mThumbnailLeft -
+                            ((curPoint.column - point.column) * (mHorizontalGap + mThumbnailWidth));
+            imageDelta.top = mThumbnailTop -
+                    ((curPoint.row - point.row) * (mVerticalGap + mThumbnailHeight));
+            mNineImageDeltas.add(imageDelta);
+        }
     }
 
     @Override
@@ -127,6 +148,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
                     mMaskImageView.getLocationOnScreen(screenLocation);
                     mLeftDelta = mThumbnailLeft - screenLocation[0];
                     mTopDelta = mThumbnailTop - screenLocation[1];
+
+                    calculateImageDeltas();
 
                     AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
                     ViewWrapper viewWrapper = new ViewWrapper(mMaskImageView);
@@ -259,6 +282,13 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     }
 
     public void exitAnimation(final Runnable endAction) {
+
+        mRatio = ((IRatio)mMaskImageView).getRatio();
+        int[] screenLocation = new int[2];
+        mMaskImageView.getLocationOnScreen(screenLocation);
+        mLeftDelta = mNineImageDeltas.get(mCurrentPosition).left - screenLocation[0];
+        mTopDelta = mNineImageDeltas.get(mCurrentPosition).top - screenLocation[1];
+
         mViewPager.setVisibility(View.GONE);
         AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         ViewWrapper viewWrapper = new ViewWrapper(mMaskImageView);
@@ -311,5 +341,10 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
                 overridePendingTransition(0, 0);
             }
         });
+    }
+
+    protected class ImageDelta {
+        public int left;
+        public int top;
     }
 }
