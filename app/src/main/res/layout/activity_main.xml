@@ -22,7 +22,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -34,12 +33,12 @@
     <com.alious.pro.photo.library.widget.NinePicassoGridViewGroup
         android:id="@+id/nine_grid"
         android:layout_width="200dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="wrap_content"/>
 
     <com.alious.pro.photo.library.widget.NineFrescoGridViewGroup
         android:id="@+id/nine_grid2"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_below="@+id/nine_grid"
         android:layout_marginTop="30dp"
         android:layout_width="200dp"
