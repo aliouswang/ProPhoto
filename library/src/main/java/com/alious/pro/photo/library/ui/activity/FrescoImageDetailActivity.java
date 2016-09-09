@@ -64,6 +64,6 @@ public class FrescoImageDetailActivity
 
     @Override
     protected void loadImage(RatioSimpleDraweeView view, String imageUrl) {
-        ImageLoadUtil.loadScaleWithFresco(view, imageUrl);
+        ImageLoadUtil.loadScaleWithFresco(mContext, view, imageUrl);
     }
 }

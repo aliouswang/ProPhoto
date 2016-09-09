@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        imagePipeline.clearCaches();
+//        imagePipeline.clearCaches();
         initView();
     }
 

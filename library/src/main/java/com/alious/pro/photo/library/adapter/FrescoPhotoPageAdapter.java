@@ -2,6 +2,7 @@ package com.alious.pro.photo.library.adapter;
 
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,12 @@ import android.view.ViewGroup;
 import com.alious.pro.photo.library.R;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.view.DraweeHolder;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 
 import java.util.List;
 
@@ -44,31 +43,45 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
         View rootView = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.view_pager_preview, null);
         final PhotoDraweeView img_head = (PhotoDraweeView) rootView.findViewById(R.id.img_head);
-//        ImageLoadUtil.loadScaleWithFresco(img_head, mPreviewImages.get(position).getNineImageUrl());
+//        ImageLoadUtil.loadScaleWithFresco(img_head, mPreviewImages.get(position).getNineImageUrl())
 
 
-        DoubleBounce doubleBounce = new DoubleBounce();
-        //设置进度条
-        final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(container.getResources())
-                .setProgressBarImage( doubleBounce, ScalingUtils.ScaleType.CENTER_INSIDE).build();
-        DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, container.getContext());
-
-        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-        controller.setUri(Uri.parse(mPreviewImages.get(position).getNineImageUrl()));
-        controller.setOldController(mDraweeHolder.getController());
-        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                super.onFinalImageSet(id, imageInfo, animatable);
+            public void onFinalImageSet(
+                    String id,
+                    @Nullable ImageInfo imageInfo,
+                    @Nullable Animatable anim) {
                 if (imageInfo == null) {
                     return;
                 }
+                float mScale = (float) imageInfo.getHeight() / (float) imageInfo.getWidth();
+//                scaleDraweeView.setRatio(mScale);
                 img_head.update(imageInfo.getWidth(), imageInfo.getHeight());
-//                img_head.setRatio((float)imageInfo.getWidth()/(float)imageInfo.getHeight());
             }
-        });
-        img_head.setController(controller.build());
-//        img_head.setPhotoUri(Uri.parse(mPreviewImages.get(position).getNineImageUrl()));
+
+            @Override
+            public void onIntermediateImageSet(String id, @Nullable ImageInfo imageInfo) {
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+            }
+        };
+        Uri uri = Uri.parse(mPreviewImages.get(position).getNineImageUrl());
+        GenericDraweeHierarchyBuilder hierarchyBuilder
+                = new GenericDraweeHierarchyBuilder(container.getResources());
+        GenericDraweeHierarchy hierarchy =
+                hierarchyBuilder.
+                        setPlaceholderImage(R.drawable.ic_default_loading)
+                        .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(controllerListener)
+                .setUri(uri)
+                .build();
+        img_head.setController(controller);
+        img_head.setHierarchy(hierarchy);
+
         container.addView(rootView);
         return rootView;
     }

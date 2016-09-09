@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,6 +50,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
     public static final String THUMBNAIL_RATIO = "thumbnail_ratio";
     public static final String HORIZONTAL_GAP = "horizontal_gap";
     public static final String VERTICAL_GAP = "vertical_gap";
+
+    protected Context mContext;
 
     protected T mMaskImageView;
 
@@ -120,7 +123,7 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
         parseIntent(getIntent());
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        mContext = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
