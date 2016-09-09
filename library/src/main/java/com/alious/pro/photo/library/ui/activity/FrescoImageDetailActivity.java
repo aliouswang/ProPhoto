@@ -2,9 +2,11 @@ package com.alious.pro.photo.library.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
 import com.alious.pro.photo.library.R;
+import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.model.Point;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
@@ -43,6 +45,11 @@ public class FrescoImageDetailActivity
                 putExtra(HORIZONTAL_GAP, horizontalGap)
         ;
         return intent;
+    }
+
+    @Override
+    protected PagerAdapter getPagerAdapter() {
+        return new FrescoPhotoPageAdapter(mNineImageUrls);
     }
 
     @Override

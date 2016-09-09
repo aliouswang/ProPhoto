@@ -2,9 +2,11 @@ package com.alious.pro.photo.library.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
 import com.alious.pro.photo.library.R;
+import com.alious.pro.photo.library.adapter.PicassoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.model.Point;
 import com.alious.pro.photo.library.utils.ImageLoadUtil;
@@ -38,6 +40,12 @@ public class PicassoImageDetailActivity extends BaseImageDetailActivity<RatioIma
                 putExtra(VERTICAL_GAP, verticalGap).
                 putExtra(HORIZONTAL_GAP, HorizontalGap);
         return intent;
+    }
+
+    @Override
+    protected PagerAdapter getPagerAdapter() {
+        return new PicassoPhotoPageAdapter(mNineImageUrls);
+//        return new FrescoPhotoPageAdapter(mNineImageUrls);
     }
 
     @Override

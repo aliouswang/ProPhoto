@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -21,7 +22,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alious.pro.photo.library.R;
-import com.alious.pro.photo.library.adapter.FrescoPhotoPageAdapter;
 import com.alious.pro.photo.library.interfaces.IRatio;
 import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.alious.pro.photo.library.model.Point;
@@ -75,9 +75,9 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
     private ViewPager mViewPager;
 
-    private ArrayList<Point> mNineImagePoints;
-    private ArrayList<NineImageUrl> mNineImageUrls;
-    private ArrayList<ImageDelta> mNineImageDeltas;
+    protected ArrayList<Point> mNineImagePoints;
+    protected ArrayList<NineImageUrl> mNineImageUrls;
+    protected ArrayList<ImageDelta> mNineImageDeltas;
 
     private volatile boolean bEnterAnimGoing;
     private volatile boolean bExitAnimGoing;
@@ -195,9 +195,9 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setVisibility(View.GONE);
-        FrescoPhotoPageAdapter photoPageAdapter = new
-                FrescoPhotoPageAdapter(mNineImageUrls);
-        mViewPager.setAdapter(photoPageAdapter);
+//        FrescoPhotoPageAdapter photoPageAdapter = new
+//                FrescoPhotoPageAdapter(mNineImageUrls);
+        mViewPager.setAdapter(getPagerAdapter());
         mViewPager.setCurrentItem(mCurrentPosition);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -218,6 +218,8 @@ public abstract class BaseImageDetailActivity<T extends View> extends Activity {
             }
         });
     }
+
+    protected abstract PagerAdapter getPagerAdapter();
 
     protected abstract int getInflateLayout();
     protected abstract void initMaskImageView();
