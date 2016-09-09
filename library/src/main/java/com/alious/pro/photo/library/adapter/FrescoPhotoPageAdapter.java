@@ -13,8 +13,6 @@ import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 
@@ -69,18 +67,18 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
             }
         };
         Uri uri = Uri.parse(mPreviewImages.get(position).getNineImageUrl());
-        GenericDraweeHierarchyBuilder hierarchyBuilder
-                = new GenericDraweeHierarchyBuilder(container.getResources());
-        GenericDraweeHierarchy hierarchy =
-                hierarchyBuilder.
-                        setPlaceholderImage(R.drawable.ic_default_loading)
-                        .build();
+//        GenericDraweeHierarchyBuilder hierarchyBuilder
+//                = new GenericDraweeHierarchyBuilder(container.getResources());
+//        GenericDraweeHierarchy hierarchy =
+//                hierarchyBuilder.
+//                        setPlaceholderImage(R.drawable.ic_default_loading)
+//                        .build();
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(controllerListener)
                 .setUri(uri)
                 .build();
         img_head.setController(controller);
-        img_head.setHierarchy(hierarchy);
+//        img_head.setHierarchy(hierarchy);
 
         container.addView(rootView);
         return rootView;
