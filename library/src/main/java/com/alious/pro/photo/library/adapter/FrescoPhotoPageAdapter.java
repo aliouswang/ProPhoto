@@ -12,7 +12,12 @@ import com.alious.pro.photo.library.interfaces.NineImageUrl;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 
 import java.util.List;
 
@@ -39,12 +44,18 @@ public class FrescoPhotoPageAdapter extends PagerAdapter{
         View rootView = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.view_pager_preview, null);
         final PhotoDraweeView img_head = (PhotoDraweeView) rootView.findViewById(R.id.img_head);
-
 //        ImageLoadUtil.loadScaleWithFresco(img_head, mPreviewImages.get(position).getNineImageUrl());
+
+
+        DoubleBounce doubleBounce = new DoubleBounce();
+        //设置进度条
+        final GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(container.getResources())
+                .setProgressBarImage( doubleBounce, ScalingUtils.ScaleType.CENTER_INSIDE).build();
+        DraweeHolder<GenericDraweeHierarchy> mDraweeHolder = DraweeHolder.create(hierarchy, container.getContext());
 
         PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
         controller.setUri(Uri.parse(mPreviewImages.get(position).getNineImageUrl()));
-        controller.setOldController(img_head.getController());
+        controller.setOldController(mDraweeHolder.getController());
         controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
