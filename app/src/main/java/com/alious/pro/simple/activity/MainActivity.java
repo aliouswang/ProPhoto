@@ -10,8 +10,6 @@ import com.alious.pro.photo.library.widget.NineFrescoGridViewGroup;
 import com.alious.pro.photo.library.widget.NinePicassoGridViewGroup;
 import com.alious.pro.photo.library.widget.RatioImageView;
 import com.alious.pro.simple.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipeline;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+//        ImagePipeline imagePipeline = Fresco.getImagePipeline();
 //        imagePipeline.clearCaches();
         initView();
     }
